@@ -13,6 +13,7 @@ import numpy as np
 # y_min = 0 #sys.maxint
 # y_max = 2000 #-sys.maxint - 1
 
+# track_it_xy_list, trials_time_list = read_TI_data(TI_file_path):
 def read_TI_data(TI_file_path):
 
   flag = 0
@@ -84,26 +85,34 @@ def read_TI_data(TI_file_path):
     
       if "target" in row:
           index = row.index("target")
-      if len(row)>0 and row[0] == "Frame Timestamp (Relative)":
+      if len(row) > 0 and row[0] == "Frame Timestamp (Relative)":
           flag = 1
-      if len(row)>0 and row[0] == "Frame Timestamp":
+      if len(row) > 0 and row[0] == "Frame Timestamp":
           flag = 1
           add_absolute = True
       if "startTime" in row:
           startTime_flag = 1
 
-  return track_it_xy_list, trials_time_list
+  return track_it_xy_list, distractors_xy_list, trials_time_list
 
-def read_ET_data(ET_file_path, trials_time_list):
+# Examples:
+#   No Filtering:
+#     eye_track_xy_list = read_ET_data(ET_file_path, trials_time_list)
+#   Filter trials with <50% valid eye-tracking data
+#     eye_track_xy_list = read_ET_data(ET_file_path, trials_time_list, filter_threshold = 0.5)
+# Keeps trials with at least filter_threshold fraction of valid eye-tracking points
+def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
 
   last_valid_x = 0
   last_valid_y = 0
   trial_count = 0
 
+  count_invalid = 0
+
   et_x_list = []
   et_y_list = []
   eye_track_xy_list = []
-
+  trials_to_keep = []
 
   with open(ET_file_path, 'rb') as ET_file:
 
@@ -114,7 +123,7 @@ def read_ET_data(ET_file_path, trials_time_list):
       if trial_count >= len(trials_time_list):
           break
       
-      # should have len(row) >= 7 for rows containing valid eyetracking data
+      # rows containing valid eyetracking data should have len(row) >= 7
       if len(row) < 7:
           continue
   
@@ -124,15 +133,17 @@ def read_ET_data(ET_file_path, trials_time_list):
       current_et_time = float(row[0])
 
       # Eyetracking data before trial starts is only used for interpolating
-      x_mean = float(row[1])
-      y_mean = float(row[2])
-      x_left = float(row[3])
-      x_right = float(row[5])
-      y_left = float(row[4])
-      y_right = float(row[6])
-      if min(x_left,x_right,y_left,y_right) != 0:
-          last_valid_x = x_mean
-          last_valid_y = y_mean
+      x_mean, y_mean, x_left, x_right, y_left, y_right = (np.asarray(row[1:7])).astype(np.float)
+      # print 'x_mean: ' + str(x_mean) + ' y_mean: ' + str(y_mean) + ' x_left: ' + str(x_left) + ' ...'
+      # float(row[1])
+      # float(row[2])
+      # float(row[3])
+      # float(row[5])
+      # float(row[4])
+      # float(row[6])
+      if min(x_left, x_right, y_left, y_right) != 0:
+        last_valid_x = x_mean
+        last_valid_y = y_mean
   
       # Skip eyetracking data before trial starts
       if current_et_time < trial_start_time:
@@ -141,23 +152,44 @@ def read_ET_data(ET_file_path, trials_time_list):
       # If trial hasn't ended yet, read in next row of eyetracking data
       if current_et_time < trial_end_time:
   
-          # Fill in any missing points with the last previous valid point
-          if min(x_left,x_right,y_left,y_right) != 0:
-              last_valid_x = x_mean
-              last_valid_y = y_mean
-          else:
-              x_mean = last_valid_x
-              y_mean = last_valid_y
+        # Fill in any missing points with the last previous valid point
+        if min(x_left, x_right, y_left, y_right) != 0:
+          last_valid_x = x_mean
+          last_valid_y = y_mean
+        else:
+          x_mean = last_valid_x
+          y_mean = last_valid_y
+          count_invalid += 1
   
-          et_x_list.append(x_mean)
-          et_y_list.append(y_mean)
+        et_x_list.append(x_mean)
+        et_y_list.append(y_mean)
   
-  
-      # Trial done; append to overall data and reset lists
+      # Done reading trial
+      # If there's enough valid data, append to overall data
+      # Either way, reset and prepare to read next trial
       else:
-          eye_track_xy_list.append([et_x_list,et_y_list])
-          et_x_list = []
-          et_y_list = []
-          trial_count+=1
+        if count_invalid <= len(et_x_list) * filter_threshold:
+          print 'Keeping trial ' + str(trial_count) + ' with error rate ' + str(float(count_invalid)/len(et_x_list)) + '.'
+          trials_to_keep.append(trial_count)
+          eye_track_xy_list.append([et_x_list, et_y_list])
+        else:
+          print 'Discarding trial ' + str(trial_count) + ' with error rate ' + str(float(count_invalid)/len(et_x_list)) + '.'
+        et_x_list = []
+        et_y_list = []
+        trial_count += 1
+        count_invalid = 0
 
-  return eye_track_xy_list
+  return eye_track_xy_list, trials_to_keep
+
+# Given trackit data and a list of trials to keep (e.g., based on filtering
+# eye-tracking data), return a subset of data containing only those trials
+def filter_trackit(track_it_xy_list, to_keep):
+  track_it_xy_list = [track_it_xy_list[trial] for trial in to_keep]
+  return track_it_xy_list
+
+def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0):
+  track_it_xy_list, distractors_xy_list, trials_time_list = read_TI_data(TI_file_path)
+  eye_track_xy_list, trials_to_keep = read_ET_data(ET_file_path, trials_time_list, filter_threshold = filter_threshold)
+  track_it_xy_list = filter_trackit(track_it_xy_list, trials_to_keep)
+  distractors_xy_list = filter_trackit(distractors_xy_list, trials_to_keep)
+  return track_it_xy_list, distractors_xy_list, eye_track_xy_list
