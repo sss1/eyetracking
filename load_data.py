@@ -7,12 +7,6 @@ import numpy as np
 # TI_fname = "A256_0Dis.csv"
 # ET_fname = "A256_0Dis_2_1_2017_14_32.csv"
 
-# # bondaries of track-it grid
-# x_min = 0 #sys.maxint
-# x_max = 2000 #-sys.maxint - 1
-# y_min = 0 #sys.maxint
-# y_max = 2000 #-sys.maxint - 1
-
 # track_it_xy_list, trials_time_list = read_TI_data(TI_file_path):
 def read_TI_data(TI_file_path):
 
@@ -144,6 +138,12 @@ def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
       if min(x_left, x_right, y_left, y_right) != 0:
         last_valid_x = x_mean
         last_valid_y = y_mean
+      elif x_left == 0:
+        x_mean = x_right
+        y_mean = y_right
+      else:
+        x_mean = x_left
+        y_mean = y_left
   
       # Skip eyetracking data before trial starts
       if current_et_time < trial_start_time:
@@ -169,11 +169,11 @@ def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
       # Either way, reset and prepare to read next trial
       else:
         if count_invalid <= len(et_x_list) * filter_threshold:
-          print 'Keeping trial ' + str(trial_count) + ' with error rate ' + str(float(count_invalid)/len(et_x_list)) + '.'
+#           print 'Keeping trial ' + str(trial_count) + ' with error rate ' + str(float(count_invalid)/len(et_x_list)) + '.'
           trials_to_keep.append(trial_count)
           eye_track_xy_list.append([et_x_list, et_y_list])
-        else:
-          print 'Discarding trial ' + str(trial_count) + ' with error rate ' + str(float(count_invalid)/len(et_x_list)) + '.'
+#         else:
+#           print 'Discarding trial ' + str(trial_count) + ' with error rate ' + str(float(count_invalid)/len(et_x_list)) + '.'
         et_x_list = []
         et_y_list = []
         trial_count += 1
@@ -190,6 +190,13 @@ def filter_trackit(track_it_xy_list, to_keep):
 def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0):
   track_it_xy_list, distractors_xy_list, trials_time_list = read_TI_data(TI_file_path)
   eye_track_xy_list, trials_to_keep = read_ET_data(ET_file_path, trials_time_list, filter_threshold = filter_threshold)
+  print '\nBefore filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
+  print 'Before filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
+  # print 'Before filtering, np.shape(distractors_xy_list): ' + str(np.shape(distractors_xy_list))
+  print 'trials_to_keep: ' + str(trials_to_keep)
   track_it_xy_list = filter_trackit(track_it_xy_list, trials_to_keep)
   distractors_xy_list = filter_trackit(distractors_xy_list, trials_to_keep)
+  print 'After filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
+  print 'After filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
+  # print 'After filtering, np.shape(distractors_xy_list): ' + str(np.shape(distractors_xy_list))
   return track_it_xy_list, distractors_xy_list, eye_track_xy_list

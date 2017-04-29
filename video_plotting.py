@@ -19,11 +19,11 @@ track_it_xy_list, distractors_xy_list, eye_track_xy_list \
                             ET_file_path,
                             filter_threshold = 0.000001)
 
-# bondaries of track-it grid
-x_min = 0 #sys.maxint
-x_max = 2000 #-sys.maxint - 1
-y_min = 0 #sys.maxint
-y_max = 2000 #-sys.maxint - 1
+# boundaries of track-it grid
+x_min = 600
+x_max = 1400
+y_min = 100
+y_max = 900
 
 space = 50 # number of extra pixels to display on either side of the plot
 
@@ -44,7 +44,7 @@ for trial_idx in range(len(track_it_xy_list)):
 
     fig = plt.figure()
     # ax = plt.axes(xlim=(min(eye_track_xs) - space, max(eye_track_xs) + space), ylim=(min(eye_track_ys) - space, max(eye_track_ys) + space))
-    ax = plt.axes(xlim=(0, 2000), ylim = (0, 2000))
+    ax = plt.axes(xlim=(x_min, x_max), ylim = (y_min, y_max))
     trackit_line, = ax.plot([], [], lw=2)
     eye_track_line, = ax.plot([], [], lw=2)
     distractors_lines = []
@@ -55,7 +55,7 @@ for trial_idx in range(len(track_it_xy_list)):
     
     # initialization function: plot the background of each frame
     def init():
-        plt.axes(xlim=(0,2000),ylim=(0,2000))
+        plt.axes(xlim=(x_min, x_max),ylim=(y_min, y_max))
         # plt.axes(xlim=(min(eye_track_xs) - space, max(eye_track_xs) + space), ylim=(min(eye_track_ys) - space, max(eye_track_ys) + space))
         # plt.axes(xlim=(min(x_min) - space, max(x_max) + space), ylim=(min(y_min) - space, max(y_max) + space))
         trackit_line.set_data([], [])
@@ -82,8 +82,8 @@ for trial_idx in range(len(track_it_xy_list)):
             # plt.plot(distractors[j][0][i:(i + lag)], distractors[j][1][i:(i + lag)], color = "red")
         # plt.plot([x_min, x_max, x_max, x_min, x_min], [y_max, y_max, y_min, y_min, y_max], 'k')
         plt.draw()
-        plt.xlim([0, 2000])
-        plt.ylim([0, 2000])
+        plt.xlim([x_min, x_max])
+        plt.ylim([y_min, y_max])
         timestep = 0.0333
         time.sleep(timestep)
         return trackit_line, eye_track_line,

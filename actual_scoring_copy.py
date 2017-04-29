@@ -7,7 +7,7 @@ import numpy as np
 import os
 from load_data import load_full_subject_data
 
-def read_and_analyze_file(maindir,subfolder,subject):
+def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
     fName = None
     dirName = maindir+"TrackItOutput/"+subfolder+"/"
     for file in os.listdir(dirName):
@@ -31,9 +31,9 @@ def read_and_analyze_file(maindir,subfolder,subject):
     track_it_xy_list, distractors_xy_list, eye_track_xy_list \
       = load_full_subject_data(TI_file_path,
                                 ET_file_path,
-                                filter_threshold = 0.25)
+                                filter_threshold = filter_threshold)
 
-    mean_trial_errors = []
+    # mean_trial_errors = []
     all_trials_error_over_time = []
 
     # squared distance error
@@ -62,11 +62,9 @@ def read_and_analyze_file(maindir,subfolder,subject):
                                                    trackit_x,
                                                    trackit_y))
                                          
-        mean_trial_error = sum(trial_error_over_time)/trial_length
-        mean_trial_errors.append(mean_trial_error)
+        # mean_trial_error = sum(trial_error_over_time)/trial_length
+        # mean_trial_errors.append(mean_trial_error)
         all_trials_error_over_time.append(trial_error_over_time)
-
-    print mean_trial_errors
 
     for trial_idx in range(len(track_it_xy_list)):
         errors = all_trials_error_over_time[trial_idx]
