@@ -7,9 +7,13 @@ import numpy as np
 import os
 from load_data import load_full_subject_data
 
+# squared distance error
+def error_fcn(et_x, et_y, trackit_x, trackit_y):
+    return math.sqrt((et_x - trackit_x)**2 + (et_y - trackit_y)**2)
+
 def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
     fName = None
-    dirName = maindir+"TrackItOutput/"+subfolder+"/"
+    dirName = maindir + "TrackItOutput/" + subfolder + "/"
     for file in os.listdir(dirName):
         if fnmatch.fnmatch(file, subject + "*.csv"):
             fName = file
@@ -17,9 +21,9 @@ def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
     if fName == None:
         print 'Track-It file for subject ' + subject + ' not found.'
         return None
-    TI_file_path = dirName + fName        
+    TI_file_path = dirName + fName
 
-    dirName = maindir+"EyeTracker/"+subfolder+"/"
+    dirName = maindir + "EyeTracker/" + subfolder + "/"
     fName = None
     for file in os.listdir(dirName):
         if fnmatch.fnmatch(file, subject + "*.csv"):
@@ -33,12 +37,7 @@ def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
                                 ET_file_path,
                                 filter_threshold = filter_threshold)
 
-    # mean_trial_errors = []
     all_trials_error_over_time = []
-
-    # squared distance error
-    def error_fcn(et_x, et_y, trackit_x, trackit_y):
-        return math.sqrt((et_x - trackit_x)**2 + (et_y - trackit_y)**2)
 
     for trial_idx in range(len(track_it_xy_list)):
 
@@ -62,14 +61,9 @@ def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
                                                    trackit_x,
                                                    trackit_y))
                                          
-        # mean_trial_error = sum(trial_error_over_time)/trial_length
-        # mean_trial_errors.append(mean_trial_error)
         all_trials_error_over_time.append(trial_error_over_time)
-
-    for trial_idx in range(len(track_it_xy_list)):
-        errors = all_trials_error_over_time[trial_idx]
 
     # For each time point, the mean (across trials) error at that time
     mean_errors_by_time = map(np.mean, zip(*all_trials_error_over_time))
 
-    return mean_errors_by_time
+    return mean_errors_by_time, all_trials_error_over_time
