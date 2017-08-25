@@ -6,10 +6,7 @@ import math
 import numpy as np
 import os
 from load_data import load_full_subject_data
-
-# squared distance error
-def error_fcn(et_x, et_y, trackit_x, trackit_y):
-    return math.sqrt((et_x - trackit_x)**2 + (et_y - trackit_y)**2)
+from util import error_fcn
 
 def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
     fName = None
@@ -29,7 +26,7 @@ def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
         if fnmatch.fnmatch(file, subject + "*.csv"):
             fName = file
     if fName == None:
-        print 'Eyetracking file for subject ' + subject + ' not found.'
+        print 'Eyetracking file for subject ' + subject + ' in condition ' + subfolder + ' not found.'
         return None
     ET_file_path = dirName + fName
     track_it_xy_list, distractors_xy_list, eye_track_xy_list \
@@ -64,6 +61,6 @@ def read_and_analyze_file(maindir, subfolder, subject, filter_threshold = 1.0):
         all_trials_error_over_time.append(trial_error_over_time)
 
     # For each time point, the mean (across trials) error at that time
-    mean_errors_by_time = map(np.mean, zip(*all_trials_error_over_time))
+    mean_errors_by_time = map(np.nanmean, zip(*all_trials_error_over_time))
 
     return mean_errors_by_time, all_trials_error_over_time
