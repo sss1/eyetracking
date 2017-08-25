@@ -97,8 +97,8 @@ def read_TI_data(TI_file_path):
 # Keeps trials with at least filter_threshold fraction of valid eye-tracking points
 def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
 
-  last_valid_x = 0
-  last_valid_y = 0
+  # last_valid_x = 0
+  # last_valid_y = 0
   trial_count = 0
 
   count_invalid = 0
@@ -138,12 +138,12 @@ def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
       if min(x_left, x_right, y_left, y_right) != 0:
         last_valid_x = x_mean
         last_valid_y = y_mean
-      elif x_left == 0:
-        x_mean = x_right
-        y_mean = y_right
+      elif x_right > 0:
+        last_valid_x = x_right
+        last_valid_y = y_right
       else:
-        x_mean = x_left
-        y_mean = y_left
+        last_valid_x = x_left
+        last_valid_y = y_left
   
       # Skip eyetracking data before trial starts
       if current_et_time < trial_start_time:
@@ -152,17 +152,35 @@ def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
       # If trial hasn't ended yet, read in next row of eyetracking data
       if current_et_time < trial_end_time:
   
-        # Fill in any missing points with the last previous valid point
-        if min(x_left, x_right, y_left, y_right) != 0:
-          last_valid_x = x_mean
-          last_valid_y = y_mean
-        else:
-          x_mean = last_valid_x
-          y_mean = last_valid_y
-          count_invalid += 1
+        # # Fill in any missing points with the last previous valid point
+        # if min(x_left, x_right, y_left, y_right) != 0:
+        #   last_valid_x = x_mean
+        #   last_valid_y = y_mean
+        # else:
+        #   x_mean = last_valid_x
+        #   y_mean = last_valid_y
+        #   count_invalid += 1
+        # et_x_list.append(x_mean)
+        # et_y_list.append(y_mean)
   
-        et_x_list.append(x_mean)
-        et_y_list.append(y_mean)
+        # If either eye is missing, just use the other one.
+        # If both are missing, replace with NaN (and increment invalid count)
+        if min(x_left, x_right, y_left, y_right) != 0:
+          x_next = x_mean
+          y_next = y_mean
+        elif x_left > 0 and y_left > 0:
+          x_next = x_left
+          y_next = y_left
+        elif x_right > 0 and y_right > 0:
+          x_next = x_right
+          y_next = y_right
+        else:
+          x_next = np.nan
+          y_next = np.nan
+          count_invalid += 1
+        
+        et_x_list.append(x_next)
+        et_y_list.append(y_next)
   
       # Done reading trial
       # If there's enough valid data, append to overall data
@@ -190,13 +208,13 @@ def filter_trackit(track_it_xy_list, to_keep):
 def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0):
   track_it_xy_list, distractors_xy_list, trials_time_list = read_TI_data(TI_file_path)
   eye_track_xy_list, trials_to_keep = read_ET_data(ET_file_path, trials_time_list, filter_threshold = filter_threshold)
-  print '\nBefore filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
-  print 'Before filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
+  # print '\nBefore filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
+  # print 'Before filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
   # print 'Before filtering, np.shape(distractors_xy_list): ' + str(np.shape(distractors_xy_list))
-  print 'trials_to_keep: ' + str(trials_to_keep)
+  # print 'trials_to_keep: ' + str(trials_to_keep)
   track_it_xy_list = filter_trackit(track_it_xy_list, trials_to_keep)
   distractors_xy_list = filter_trackit(distractors_xy_list, trials_to_keep)
-  print 'After filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
-  print 'After filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
+  # print 'After filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
+  # print 'After filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
   # print 'After filtering, np.shape(distractors_xy_list): ' + str(np.shape(distractors_xy_list))
   return track_it_xy_list, distractors_xy_list, eye_track_xy_list
