@@ -7,20 +7,21 @@ import sys
 from load_data import load_full_subject_data
 from util import error_fcn
 
-root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/adult_pilot/"
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/"
+subject_type = "3yo/" # "adult_pilot/"
 TI_data_dir = "TrackItOutput/AllSame/"
 ET_data_dir = "EyeTracker/AllSame/"
-TI_fname = "AnnaSame.csv"
-ET_fname = "AnnaSame_9_13_2016_13_25.csv"
-TI_file_path = root + TI_data_dir + TI_fname
-ET_file_path = root + ET_data_dir + ET_fname
+TI_fname = "A232Same.csv" # "AnnaSame.csv"
+ET_fname = "A232Same_3_29_2016_10_26.csv" # "AnnaSame_9_13_2016_13_25.csv"
+TI_file_path = root + subject_type + TI_data_dir + TI_fname
+ET_file_path = root + subject_type + ET_data_dir + ET_fname
 
 print 'Track-It file: ' + TI_file_path
 
 track_it_xy_list, distractors_xy_list, eye_track_xy_list \
   = load_full_subject_data(TI_file_path,
                             ET_file_path,
-                            filter_threshold = 0)
+                            filter_threshold = 1)
 
 # boundaries of track-it grid
 x_min = 600
