@@ -3,7 +3,8 @@ from hmmlearn import hmm
 from load_data import load_full_subject_data
 import warnings
 
-root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/"
+# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/"
+root = "/home/sss1/Desktop/academic/projects/eyetracking/"
 subject_type = "adult_pilot/"
 TI_data_dir = "TrackItOutput/AllSame/"
 ET_data_dir = "EyeTracker/AllSame/"
@@ -33,9 +34,9 @@ model.means_ = np.array([[0.0, 0.0], [5.0, 5.0], [5.0, -5.0], [-5.0, 5.0], [-5.0
 model.covars_ = np.tile(np.identity(2), (5, 1, 1))
 with warnings.catch_warnings():
   warnings.filterwarnings("ignore",category=DeprecationWarning)
-  X, Z = model.sample(10000) # We will want to replace this with model.fit
+  X, Z = model.sample(30) # We will want to replace this with model.predict
 print X
 print Z
 with warnings.catch_warnings():
   warnings.filterwarnings("ignore",category=DeprecationWarning)
-  print model.fit(X)
+  print model.predict(X)
