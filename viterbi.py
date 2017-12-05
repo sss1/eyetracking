@@ -25,6 +25,8 @@ def viterbi(X, mu, pi, Pi):
   # For each state at each point in time, compute the maximum likelihood (over
   # paths) of ending up at that state
   for k in range(K): # First state likelhoods are based on starting probabilities
+    print X.shape
+    print mu.shape
     T[0, k] = log(pi[k]) + log_emission_prob(X[0, :], mu[k, 0, :])
   for n in range(1, N): # time step
     for k in range(K): # current state
@@ -32,10 +34,10 @@ def viterbi(X, mu, pi, Pi):
       max_idx = -1
       for j in range(K): # previous state
         next_likelihood = T[n - 1, j] + log(Pi[j, k]) + log_emission_prob(X[n, :], mu[k, n, :])
-        print('Settined next_likelihood[ ' + str(n) + ' to ' + str(next_likelihood))
-        if next_likelihood != next_likelihood:
-          print('X[n, :]: ' + str(X[n, :]))
-          raise Exception('Likelihood is nan')
+        # print('Setting next_likelihood[' + str(n) + '] to ' + str(next_likelihood))
+        # if next_likelihood != next_likelihood:
+        #   print('X[n, :]: ' + str(X[n, :]))
+        #   raise Exception('Likelihood is nan')
         if next_likelihood > max_likelihood:
           max_likelihood = next_likelihood
           max_idx = j
@@ -44,11 +46,11 @@ def viterbi(X, mu, pi, Pi):
 
   # Having computed all the most likely paths to each final states, extract the
   # most likely sequence of states
-  MLE = np.zeros((N, K), dtype = np.int) # Final most likely sequence of states
+  MLE = np.zeros((N,), dtype = np.int) # Final most likely sequence of states
   MLE[N - 1] = np.argmax(T[N - 1, :])
   for n in reversed(range(N - 1)):
     MLE[n] = S[n, MLE[n + 1]]
-    # print('Settined MLE[' + str(n) + '] to ' + str(S[n, MLE[n + 1]]))
+    # print('Setting MLE[' + str(n) + '] to ' + str(S[n, MLE[n + 1]]))
   return MLE
 
 def log_emission_prob(X, mu):
