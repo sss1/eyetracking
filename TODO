@@ -1,0 +1,14 @@
+1) Resynchronize ET and TI time in video plot, using util.interpolate_to_length
+2) Label active state in video plot (e.g., with scatter point)
+3) Tune parameters until results look reasonable
+4) Figure out how to handle missing eye-tracker data
+   - Options:
+     1) Assume each state emits NaN with equal probability - what to do for inattentive state?
+     2) Remove nan time points, and treat segments separately - easy but wrong
+     3) Categorize as new state - what is the transition prob. from this state?
+5) Add inattentive state
+   - What is the distribution? Uniform over the screen?
+
+...
+
+N) Implement EM (Baum-Welch) to improve transition matrices, covariance, etc.
