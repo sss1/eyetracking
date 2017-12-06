@@ -1,11 +1,11 @@
 import numpy as np
 import math
 from scipy.stats import multivariate_normal
-from stats import log_multivariate_normal_density
+# from stats import log_multivariate_normal_density
 from math import log
 from scipy.stats import multivariate_normal
 
-sigma2 = 30 ** 2 # spherical emission variance (i.e., E[||X - E[X]||_2^2])
+sigma2 = 100 ** 2 # spherical emission variance (i.e., E[||X - E[X]||_2^2])
 
 # In the following,
 #   N denotes the length (in frames) of the trial
@@ -25,8 +25,6 @@ def viterbi(X, mu, pi, Pi):
   # For each state at each point in time, compute the maximum likelihood (over
   # paths) of ending up at that state
   for k in range(K): # First state likelhoods are based on starting probabilities
-    print X.shape
-    print mu.shape
     T[0, k] = log(pi[k]) + log_emission_prob(X[0, :], mu[k, 0, :])
   for n in range(1, N): # time step
     for k in range(K): # current state
@@ -50,11 +48,9 @@ def viterbi(X, mu, pi, Pi):
   MLE[N - 1] = np.argmax(T[N - 1, :])
   for n in reversed(range(N - 1)):
     MLE[n] = S[n, MLE[n + 1]]
-    # print('Setting MLE[' + str(n) + '] to ' + str(S[n, MLE[n + 1]]))
   return MLE
 
 def log_emission_prob(X, mu):
   # Add singleton dimension using None because log_multivariate_normal_density is written for
   # multiple samples, but we only need it for 1
-  # return log_multivariate_normal_density(X[None, :], mu[None, :], sigma2 * np.identity(2), covariance_type = 'diag')
   return multivariate_normal.logpdf(X, mean = mu, cov = sigma2 * np.identity(2))
