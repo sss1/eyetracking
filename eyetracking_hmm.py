@@ -5,7 +5,7 @@ from load_data import load_full_subject_data
 from viterbi import viterbi
 import util
 
-def getMLE(eye_track, target, distractors):
+def getTrackItMLE(eye_track, target, distractors):
   # root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
   # # root = "/home/sss1/Desktop/academic/projects/eyetracking/" # Home desktop
   # subject_type = "adult_pilot/"
@@ -49,7 +49,9 @@ def getMLE(eye_track, target, distractors):
  
   X = eye_track.swapaxes(0, 1)
   mu = np.concatenate((target[None, :, :], distractors)).swapaxes(1, 2)
- 
+  return getMLE(X, mu)
+
+def getMLE(X, mu): 
   # For now, just hardcode model parameters
   trans_prob = 0.0001 # Probability of transitioning between any pair of states
   n_states = mu.shape[0]
