@@ -14,10 +14,16 @@
 
 
 12/5/17 Meeting Notes
-Missing Data
+
+<Missing Data>
 Less than 10 frames - can definitely impute
 --- Figure out boundary (histogram) ---
 More than half missing, delete trial
 More than half trials missing, delete kid
 
 Trial start - estimate from data
+
+
+Things we might want to test:
+- How often are we in the target state?
+- How often is the first state usually the target?
