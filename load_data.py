@@ -1,5 +1,6 @@
 import csv
 import numpy as np
+from util import interpolate_to_length_D, impute_missing_data_D
 
 # root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/blinky_pilot/"
 # TI_data_dir = "TrackItOutput/0Distractors/"
@@ -128,13 +129,7 @@ def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
 
       # Eyetracking data before trial starts is only used for interpolating
       x_mean, y_mean, x_left, x_right, y_left, y_right = (np.asarray(row[1:7])).astype(np.float)
-      # print 'x_mean: ' + str(x_mean) + ' y_mean: ' + str(y_mean) + ' x_left: ' + str(x_left) + ' ...'
-      # float(row[1])
-      # float(row[2])
-      # float(row[3])
-      # float(row[5])
-      # float(row[4])
-      # float(row[6])
+
       if min(x_left, x_right, y_left, y_right) != 0:
         last_valid_x = x_mean
         last_valid_y = y_mean
@@ -151,17 +146,6 @@ def read_ET_data(ET_file_path, trials_time_list, filter_threshold = 1.0):
   
       # If trial hasn't ended yet, read in next row of eyetracking data
       if current_et_time < trial_end_time:
-  
-        # # Fill in any missing points with the last previous valid point
-        # if min(x_left, x_right, y_left, y_right) != 0:
-        #   last_valid_x = x_mean
-        #   last_valid_y = y_mean
-        # else:
-        #   x_mean = last_valid_x
-        #   y_mean = last_valid_y
-        #   count_invalid += 1
-        # et_x_list.append(x_mean)
-        # et_y_list.append(y_mean)
   
         # If either eye is missing, just use the other one.
         # If both are missing, replace with NaN (and increment invalid count)
@@ -208,13 +192,24 @@ def filter_trackit(track_it_xy_list, to_keep):
 def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0):
   track_it_xy_list, distractors_xy_list, trials_time_list = read_TI_data(TI_file_path)
   eye_track_xy_list, trials_to_keep = read_ET_data(ET_file_path, trials_time_list, filter_threshold = filter_threshold)
-  # print '\nBefore filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
-  # print 'Before filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
-  # print 'Before filtering, np.shape(distractors_xy_list): ' + str(np.shape(distractors_xy_list))
-  # print 'trials_to_keep: ' + str(trials_to_keep)
   track_it_xy_list = filter_trackit(track_it_xy_list, trials_to_keep)
   distractors_xy_list = filter_trackit(distractors_xy_list, trials_to_keep)
-  # print 'After filtering, np.shape(eye_track_xy_list): ' + str(np.shape(eye_track_xy_list))
-  # print 'After filtering, np.shape(track_it_xy_list): ' + str(np.shape(track_it_xy_list))
-  # print 'After filtering, np.shape(distractors_xy_list): ' + str(np.shape(distractors_xy_list))
-  return track_it_xy_list, distractors_xy_list, eye_track_xy_list
+  num_trials = len(track_it_xy_list)
+
+
+  # Convert each trial's data to a numpy array.
+  # Along the way, synchronize eyetracking and TrackIt and impute missing data, using functions from util.
+  eyetrack = []
+  target = []
+  distractors = []
+  for trial_idx in range(num_trials):
+    N = len(eye_track_xy_list[trial_idx][0]) # Number of eye-tracking frames in trial
+    eyetrack.append(impute_missing_data_D(np.array(eye_track_xy_list[trial_idx])))
+    target.append(interpolate_to_length_D(np.array(track_it_xy_list[trial_idx]), N))
+    distractors_old = np.array(distractors_xy_list[trial_idx])
+    distractors_old = distractors_old
+    distractors.append(np.zeros(distractors_old.shape[0:2] + (N,)))
+    for k in range(distractors[0].shape[0]):
+      distractors[trial_idx][k,:,:] = interpolate_to_length_D(np.array(distractors_old[k,:,:]), N)
+  return eyetrack, target, distractors
+  # return track_it_xy_list, distractors_xy_list, eye_track_xy_list
