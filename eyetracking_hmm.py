@@ -1,10 +1,6 @@
 import numpy as np
-# from hmmlearn import hmm
 from load_data import load_full_subject_data
-# import warnings
-# from viterbi import viterbi
 import util
-import math
 from scipy.stats import multivariate_normal
 from math import log
 

@@ -79,7 +79,6 @@ for trial_idx in trials_to_show:
     # time.sleep(timestep)
     return trackit_line, eyetrack_line,
 
-
   anim = animation.FuncAnimation(fig, animate,
                                  frames = trial_length - lag,
                                  interval = 20,
