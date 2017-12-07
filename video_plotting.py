@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 import time
 from load_data import load_full_subject_data
-from eyetracking_hmm import getTrackItMLE
+from eyetracking_hmm import get_trackit_MLE
 from util import preprocess_all
 
 # Specify data to display
-root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
+# root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
 # root = "/home/sss1/Desktop/academic/projects/eyetracking/" # Home desktop
 subject_type = "adult_pilot/" # "3yo/" 
 TI_data_dir = "TrackItOutput/AllSame/"
@@ -48,7 +48,7 @@ for trial_idx in trials_to_show:
   target = target_all_trials[trial_idx]
   distractors = distractors_all_trials[trial_idx]
 
-  MLE = getTrackItMLE(eyetrack, target, distractors)
+  MLE = get_trackit_MLE(eyetrack, target, distractors)
   print MLE
 
   trial_length = target.shape[1]
