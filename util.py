@@ -5,6 +5,25 @@ import numpy as np
 def error_fcn(et_x, et_y, trackit_x, trackit_y):
     return math.sqrt((et_x - trackit_x)**2 + (et_y - trackit_y)**2)
 
+# Data preprocessing steps: impute missing eye-tracking data and synchronize by interpolating TrackIt data
+def preprocess_all(eyetrack, target, distractors):
+  for trial_idx in range(len(eyetrack)):
+    N = len(eyetrack[trial_idx][0]) # Number of eye-tracking frames in trial
+    eyetrack[trial_idx] = impute_missing_data_D(eyetrack[trial_idx])
+    target[trial_idx] = interpolate_to_length_D(target[trial_idx], N)
+    distractors[trial_idx] = interpolate_to_length_distractors(distractors[trial_idx], N)
+  return eyetrack, target, distractors
+
+# Given a K x D x N array of numbers, encoding the positions of each of K D-dimensional objects over N time points,
+# performs interpolate_to_length_D (independently) on each object in X
+def interpolate_to_length_distractors(X, new_len):
+  K = X.shape[0]
+  D = X.shape[1]
+  X_new = np.zeros((K, D, new_len))
+  for k in range(K):
+    X_new[k,:,:] = interpolate_to_length_D(X[k,:,:], new_len)
+  return X_new
+
 # Given a D-dimensional sequence X of numbers, performs interpolate_to_length (independently) on each dimension of X
 # X is D x N, where D is the dimensionality and N is the sample length
 def interpolate_to_length_D(X, new_len):

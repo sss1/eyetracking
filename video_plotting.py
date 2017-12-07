@@ -4,7 +4,9 @@ from matplotlib import animation
 import time
 from load_data import load_full_subject_data
 from eyetracking_hmm import getTrackItMLE
+from util import preprocess_all
 
+# Specify data to display
 root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
 # root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
 # root = "/home/sss1/Desktop/academic/projects/eyetracking/" # Home desktop
@@ -13,16 +15,19 @@ TI_data_dir = "TrackItOutput/AllSame/"
 ET_data_dir = "EyeTracker/AllSame/"
 TI_fname = "AnnaSame.csv" # "shashank.csv" # "A232Same.csv" 
 ET_fname = "AnnaSame_9_13_2016_13_25.csv" # "shashank1_12_5_2017_13_41.csv" # "A232Same_3_29_2016_10_26.csv" 
-
 TI_file_path = root + subject_type + TI_data_dir + TI_fname
 ET_file_path = root + subject_type + ET_data_dir + ET_fname
-
 print 'Track-It file: ' + TI_file_path
 
+# Load data
 eyetrack_all_trials, target_all_trials, distractors_all_trials \
   = load_full_subject_data(TI_file_path,
                             ET_file_path,
                             filter_threshold = 1)
+
+# Data preprocessing steps: impute missing eye-tracking data and synchronize by interpolating TrackIt data
+eyetrack_all_trials, target_all_trials, distractors_all_trials = \
+  preprocess_all(eyetrack_all_trials, target_all_trials, distractors_all_trials)
 
 # boundaries of track-it grid
 x_min = 400
@@ -33,7 +38,7 @@ y_max = 1000
 space = 50 # number of extra pixels to display on either side of the plot
 
 # First set up the figure, the axis, and the plot element we want to animate
-lag = 10 # plot a time window of length lag, so we can see the trajectory # added 1 and 2
+lag = 10 # plot a time window of length lag, so we can see the trajectory more clearly
 trials_to_show = range(len(target_all_trials))
 print 'Number of trials: ' + str(len(trials_to_show))
 

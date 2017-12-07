@@ -1,6 +1,5 @@
 import csv
 import numpy as np
-from util import interpolate_to_length_D, impute_missing_data_D
 
 # root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/blinky_pilot/"
 # TI_data_dir = "TrackItOutput/0Distractors/"
@@ -203,13 +202,12 @@ def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0):
   target = []
   distractors = []
   for trial_idx in range(num_trials):
-    N = len(eye_track_xy_list[trial_idx][0]) # Number of eye-tracking frames in trial
-    eyetrack.append(impute_missing_data_D(np.array(eye_track_xy_list[trial_idx])))
-    target.append(interpolate_to_length_D(np.array(track_it_xy_list[trial_idx]), N))
-    distractors_old = np.array(distractors_xy_list[trial_idx])
-    distractors_old = distractors_old
-    distractors.append(np.zeros(distractors_old.shape[0:2] + (N,)))
-    for k in range(distractors[0].shape[0]):
-      distractors[trial_idx][k,:,:] = interpolate_to_length_D(np.array(distractors_old[k,:,:]), N)
+    eyetrack.append(np.array(eye_track_xy_list[trial_idx]))
+    target.append(np.array(track_it_xy_list[trial_idx]))
+    distractors.append(np.array(distractors_xy_list[trial_idx]))
+    # distractors_old = np.array(distractors_xy_list[trial_idx])
+    # distractors.append(np.zeros(distractors_old.shape))
+    # for k in range(distractors[0].shape[0]):
+    #   distractors[trial_idx][k,:,:] = np.array(distractors_old[k,:,:])
   return eyetrack, target, distractors
   # return track_it_xy_list, distractors_xy_list, eye_track_xy_list
