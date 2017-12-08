@@ -13,14 +13,13 @@ def get_trackit_MLE(eye_track, target, distractors):
   return get_MLE(X, mu)
 
 def get_MLE(X, mu): 
+
   # For now, just hardcode model parameters
   trans_prob = 0.0001 # Probability of transitioning between any pair of states
   n_states = mu.shape[0]
   pi = np.ones(n_states) / n_states # Uniform starting probabilities
   Pi = (1 - n_states*trans_prob) * np.identity(n_states) + trans_prob * np.ones((n_states,n_states))
-  
-  MLE = viterbi(X, mu, pi, Pi)
-  return MLE
+  return viterbi(X, mu, pi, Pi)
 
 # In the following,
 #   N denotes the length (in frames) of the trial

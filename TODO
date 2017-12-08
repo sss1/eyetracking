@@ -1,3 +1,7 @@
+- Plot histograms of missing data proportions (before and after imputation?)
+  - How much data is missing per trial
+  - Using various discarding thresholds, how many trials are removed per participant?
+
 - Tune parameters until results look reasonable
     - sigma2 = 100 ** 2 seems to work reasonably well
 - Figure out how to handle missing eye-tracker data
@@ -23,7 +27,15 @@ More than half trials missing, delete kid
 
 Trial start - estimate from data
 
+More elaborate transition matrix, incorporating distances between objects (maybe hard-coded step-function)
+
+The most important parameter is the variance, sigma2, of the
 
 Things we might want to test:
 - How often are we in the target state?
-- How often is the first state usually the target?
+- How often do we start at the target state?
+- How often do we end at the target state?
+  - How does this differ between memory-correct and memory-incorrect trials?
+- How often do we switch targets?
+  - This is highly sensitive to parameters
+- How often do we

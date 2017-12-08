@@ -1,3 +1,7 @@
+# root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
+# root = "/home/sss1/Desktop/academic/projects/eyetracking/" # Home desktop
+
 trackit_fnames_adult_0dis = ["Anna0dis.csv", \
                              "Cheul0dis.csv", \
                              "Clara0dis.csv", \
@@ -18,7 +22,7 @@ eyetrack_fnames_adult_0dis = ["Anna0dis_9_13_2016_13_29.csv", \
                               "Kristen0dis_9_13_2016_13_17.csv", \
                               "Nick0dis_9_15_2016_12_8.csv", \
                               "Rebeka_0dis_9_9_2016_12_24.csv", \
-                              "Sara_0dis_9_9_2016_12_9.csv"]
+                              "sara_0dis_9_9_2016_12_9.csv"]
 
 trackit_fnames_adult_same = ["AnnaSame.csv", \
                              "CheulSame.csv", \
@@ -31,7 +35,7 @@ trackit_fnames_adult_same = ["AnnaSame.csv", \
                              "Rebeka_Same.csv", \
                              "Sara_Same.csv"]
 
-trackit_fnames_adult_same = ["AnnaSame_9_13_2016_13_25.csv", \
+eyetrack_fnames_adult_same = ["AnnaSame_9_13_2016_13_25.csv", \
                              "CheulSame_9_13_2016_13_3.csv", \
                              "ClaraSame_9_13_2016_12_46.csv", \
                              "EdenSame_9_13_2016_12_38.csv", \
@@ -103,7 +107,7 @@ eyetrack_fnames_child_same = ["A232Same_3_29_2016_10_26.csv", \
                               "A241Same_3_22_2016_9_1.csv", \
                               "A242Same_3_22_2016_9_15.csv", \
                               "A243Same_3_22_2016_10_13.csv", \
-                              "A244Same_3_22_2016_9_27.csv", \
+                              # "A244Same_3_22_2016_9_27.csv", \ # This subject is missing TrackIt data!
                               "A245same_3_29_2016_9_5.csv", \
                               "A247Same_3_22_2016_10_21.csv"]
 
@@ -129,15 +133,28 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
-print len(trackit_fnames_adult_0dis)
-print len(eyetrack_fnames_adult_0dis)
-print len(trackit_fnames_adult_same)
-print len(trackit_fnames_adult_same)
-print len(trackit_fnames_adult_diff)
-print len(eyetrack_fnames_adult_diff)
-print len(trackit_fnames_child_0dis)
-print len(eyetrack_fnames_child_0dis)
-print len(trackit_fnames_child_same)
-print len(eyetrack_fnames_child_same)
-print len(trackit_fnames_child_diff)
-print len(eyetrack_fnames_child_diff)
+trackit_fnames_adult_0dis  = [root + "adult_pilot/TrackItOutput/0Distractors/" + fname for fname in trackit_fnames_adult_0dis]
+eyetrack_fnames_adult_0dis = [root + "adult_pilot/EyeTracker/0Distractors/" + fname for fname in eyetrack_fnames_adult_0dis]
+trackit_fnames_adult_same  = [root + "adult_pilot/TrackItOutput/AllSame/" + fname for fname in trackit_fnames_adult_same]
+eyetrack_fnames_adult_same = [root + "adult_pilot/EyeTracker/AllSame/" + fname for fname in eyetrack_fnames_adult_same]
+trackit_fnames_adult_diff  = [root + "adult_pilot/TrackItOutput/AllDiff/" + fname for fname in trackit_fnames_adult_diff]
+eyetrack_fnames_adult_diff = [root + "adult_pilot/EyeTracker/AllDiff/" + fname for fname in eyetrack_fnames_adult_diff]
+trackit_fnames_child_0dis  = [root + "3yo/TrackItOutput/0Distractors/" + fname for fname in trackit_fnames_child_0dis]
+eyetrack_fnames_child_0dis = [root + "3yo/EyeTracker/0Distractors/" + fname for fname in eyetrack_fnames_child_0dis]
+trackit_fnames_child_same  = [root + "3yo/TrackItOutput/AllSame/" + fname for fname in trackit_fnames_child_same]
+eyetrack_fnames_child_same = [root + "3yo/EyeTracker/AllSame/" + fname for fname in eyetrack_fnames_child_same]
+trackit_fnames_child_diff = [root + "3yo/TrackItOutput/AllDiff/" + fname for fname in trackit_fnames_child_diff]
+eyetrack_fnames_child_diff = [root + "3yo/EyeTracker/AllDiff/" + fname for fname in eyetrack_fnames_child_diff]
+
+trackit_fnames_adult_0dis 
+eyetrack_fnames_adult_0dis
+trackit_fnames_adult_same 
+eyetrack_fnames_adult_same
+trackit_fnames_adult_diff 
+eyetrack_fnames_adult_diff
+trackit_fnames_child_0dis 
+eyetrack_fnames_child_0dis
+trackit_fnames_child_same 
+eyetrack_fnames_child_same
+trackit_fnames_child_diff
+eyetrack_fnames_child_diff
