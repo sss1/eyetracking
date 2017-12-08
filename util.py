@@ -64,15 +64,16 @@ def __impute_missing_data(X, max_len):
   last_valid_idx = -1
   for n in range(len(X)):
     if not math.isnan(X[n]):
-      if 0 <= last_valid_idx and last_valid_idx < n - 1: # there is missing data and we have seen at least one valid eyetracking sample
+      if last_valid_idx < n - 1: # there is missing data and we have seen at least one valid eyetracking sample
         if n - (max_len + 1) <= last_valid_idx: # amount of missing data is at most than max_len
-          first_last = np.array([X[last_valid_idx], X[n]]) # initial and final values from which to linearly interpolate
-          new_len = n - last_valid_idx + 1
-          X[last_valid_idx:(n + 1)] = np.interp([float(x)/(new_len - 1) for x in range(new_len)], [0, 1], first_last)
-          # print('Successfully interpolated a block of ' + str(new_len - 2) + ' NaN(s).')
-        # else:
-        #   new_len = n - last_valid_idx + 1
-        #   print('Failed to interpolate a block of ' + str(new_len - 2) + ' NaN(s).')
+          if last_valid_idx == -1: # No previous valid data (i.e., first timepoint is missing)
+            X[0:n] = X[n] # Just propogate first valid data point
+          # TODO: we should probably also propogate the last valid data point
+          # when data is missing at the end of a trial
+          else:
+            first_last = np.array([X[last_valid_idx], X[n]]) # initial and final values from which to linearly interpolate
+            new_len = n - last_valid_idx + 1
+            X[last_valid_idx:(n + 1)] = np.interp([float(x)/(new_len - 1) for x in range(new_len)], [0, 1], first_last)
       last_valid_idx = n
   return X
 

@@ -41,6 +41,46 @@ data_child_0dis = [preprocess_all(*subject_data) for subject_data in data_child_
 data_child_same = [preprocess_all(*subject_data) for subject_data in data_child_same]
 data_child_diff = [preprocess_all(*subject_data) for subject_data in data_child_diff]
 
+plt.subplot(3, 2, 1)
+plt.hist([np.mean(np.isnan(trial_data[0,:])) for subject_data in data_adult_0dis for trial_data in subject_data[0]])
+plt.title('Adult, 0 distractors')
+plt.xlim(0, 1)
+plt.ylim(0, 50)
+
+plt.subplot(3, 2, 3)
+plt.hist([np.mean(np.isnan(trial_data[0,:])) for subject_data in data_adult_same for trial_data in subject_data[0]])
+plt.title('Adult, All Same')
+plt.xlim(0, 1)
+plt.ylim(0, 50)
+
+plt.subplot(3, 2, 5)
+plt.hist([np.mean(np.isnan(trial_data[0,:])) for subject_data in data_adult_diff for trial_data in subject_data[0]])
+plt.title('Adult, All Different')
+plt.xlim(0, 1)
+plt.ylim(0, 50)
+
+plt.subplot(3, 2, 2)
+plt.hist([np.mean(np.isnan(trial_data[0,:])) for subject_data in data_child_0dis for trial_data in subject_data[0]])
+plt.title('Child, 0 distractors')
+plt.xlim(0, 1)
+plt.ylim(0, 50)
+
+plt.subplot(3, 2, 4)
+plt.hist([np.mean(np.isnan(trial_data[0,:])) for subject_data in data_child_same for trial_data in subject_data[0]])
+plt.title('Child, All Same')
+plt.xlim(0, 1)
+plt.ylim(0, 50)
+
+plt.subplot(3, 2, 6)
+plt.hist([np.mean(np.isnan(trial_data[0,:])) for subject_data in data_child_diff for trial_data in subject_data[0]])
+plt.title('Child, All Different')
+plt.xlim(0, 1)
+plt.ylim(0, 50)
+
+plt.gcf().suptitle('Proportion of Missing Data per Trial', fontsize = "x-large")
+plt.show()
+
+
 for subject_data in data_child_0dis:
   trial_means = [np.mean(np.isnan(trial_data[0,:])) for trial_data in subject_data[0]]
   print np.mean(trial_means)
