@@ -133,6 +133,23 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
+trackit_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
+                                   "A250switch_12_13_2017_9_16.csv", \
+                                   "A252switch_12_13_2017_10_40.csv", \
+                                   # "A269switch_12_14_2017_13_43.csv", \ # difficulty calibrating
+                                   "a306SWITCH_12_13_2017_10_27.csv", \
+                                   "A309switch_12_13_2017_10_53.csv", \
+                                   "A310switch_12_14_2017_14_5.csv"]
+
+eyetrack_fnames_child_supervised = ["A225blink.csv", \
+                                    "a250switch.csv", \
+                                    "A252switch.csv", \
+                                    # "a269switch.csv", \ # difficulty calibrating
+                                    "A306switch.csv", \
+                                    "A309switch.csv", \
+                                    "a310switch.csv"]
+
+
 trackit_fnames_adult_0dis  = [root + "adult_pilot/TrackItOutput/0Distractors/" + fname for fname in trackit_fnames_adult_0dis]
 eyetrack_fnames_adult_0dis = [root + "adult_pilot/EyeTracker/0Distractors/" + fname for fname in eyetrack_fnames_adult_0dis]
 trackit_fnames_adult_same  = [root + "adult_pilot/TrackItOutput/AllSame/" + fname for fname in trackit_fnames_adult_same]
@@ -145,16 +162,5 @@ trackit_fnames_child_same  = [root + "3yo/TrackItOutput/AllSame/" + fname for fn
 eyetrack_fnames_child_same = [root + "3yo/EyeTracker/AllSame/" + fname for fname in eyetrack_fnames_child_same]
 trackit_fnames_child_diff = [root + "3yo/TrackItOutput/AllDiff/" + fname for fname in trackit_fnames_child_diff]
 eyetrack_fnames_child_diff = [root + "3yo/EyeTracker/AllDiff/" + fname for fname in eyetrack_fnames_child_diff]
-
-trackit_fnames_adult_0dis 
-eyetrack_fnames_adult_0dis
-trackit_fnames_adult_same 
-eyetrack_fnames_adult_same
-trackit_fnames_adult_diff 
-eyetrack_fnames_adult_diff
-trackit_fnames_child_0dis 
-eyetrack_fnames_child_0dis
-trackit_fnames_child_same 
-eyetrack_fnames_child_same
-trackit_fnames_child_diff
-eyetrack_fnames_child_diff
+trackit_fnames_child_supervised = [root + "switch_calibration/EyeTracker/" + fname for fname in trackit_fnames_child_supervised]
+eyetrack_fnames_child_supervised = [root + "switch_calibration/TrackItOutput/" + fname for fname in eyetrack_fnames_child_supervised]
