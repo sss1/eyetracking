@@ -5,6 +5,13 @@ import numpy as np
 def error_fcn(et_x, et_y, trackit_x, trackit_y):
     return math.sqrt((et_x - trackit_x)**2 + (et_y - trackit_y)**2)
 
+# Construct numpy array from jagged data by filling ends of short rows with NaNs
+def jagged_to_numpy(jagged):
+  aligned = np.ones((len(jagged), max([len(row) for row in jagged]))) * np.nan # allocate appropriately sized array of NaNs
+  for i, row in enumerate(jagged): #populate columns
+    aligned[i, :len(row)] = row
+  return aligned
+
 # Data preprocessing steps: impute missing eye-tracking data and synchronize by interpolating TrackIt data
 def preprocess_all(eyetrack, target, distractors):
   for trial_idx in range(len(eyetrack)):
