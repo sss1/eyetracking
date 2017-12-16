@@ -91,7 +91,7 @@ MLEs_adult_same = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_
 # print np.array([trial_data[0] for subject_data in MLEs_adult_same for trial_data in subject_data])
 # print np.array([(trial_data[0] == 0) for subject_data in MLEs_adult_same for trial_data in subject_data]).mean()
 
-# MLEs_adult_diff = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_data)] for subject_data in data_adult_diff]
+MLEs_adult_diff = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_data)] for subject_data in data_adult_diff]
 # print np.array([trial_data[0] for subject_data in MLEs_adult_diff for trial_data in subject_data])
 # print np.array([(trial_data[0] == 0) for subject_data in MLEs_adult_diff for trial_data in subject_data]).mean()
 # 
@@ -105,8 +105,7 @@ MLEs_adult_same = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_
 
 # TODO: Compare same and different conditions; is state == 0 much more often for same than for different?
 # No need to continue distinguishing trials from different subjects; replace state with 0 if on target, 1 else
-flattened = [[float(x != 0) for x in trial_data] for subject_data in MLEs_adult_same for trial_data in subject_data]
-aligned = jagged_to_numpy(flattened)
+aligned = jagged_to_numpy([[float(x != 0) for x in trial_data] for subject_data in MLEs_adult_same for trial_data in subject_data])
 
 print 'aligned.shape: ' + str(aligned.shape)
 print 'np.nanmean(aligned, axis = 0).shape: ' + str(np.nanmean(aligned, axis = 0).shape)
