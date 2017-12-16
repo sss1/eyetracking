@@ -38,4 +38,17 @@ Things we might want to test:
   - How does this differ between memory-correct and memory-incorrect trials?
 - How often do we switch targets?
   - This is highly sensitive to parameters
-- How often do we
+- How often do we revert ot target after being distracted?
+
+12/15/17 Meeting Notes
+- CogSci paper on cognitive modeling of 
+  - Compare HMM vs. other cognitive models of visual object tracking
+    - Regular or supervised TrackIt?
+      - Probably supervised, because then we can use decoding accuracy to
+        measure performance
+- CogSci paper
+  - Validate model on supervised TrackIt
+  - Reaffirm TrackIt behavioral results
+    - Same versus different conditions (on target more often in same?)
+    - Any relationship between eye-tracking and error types?
+      - e.g., can we use eye-tracking to bound spatial resolution error?
