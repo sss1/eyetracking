@@ -115,7 +115,16 @@ plt.plot(np.nanmean(aligned_adult_diff, axis = 0))
 plt.plot(np.nanmean(aligned_child_same, axis = 0))
 plt.plot(np.nanmean(aligned_child_diff, axis = 0))
 
+
+
 plt.legend(['Adult Same', 'Adult Diff', 'Child Same', 'Child Diff'])
+
+plt.gca().set_color_cycle(None)
+
+min_trial_len_adult_same = min([len(trial_data) for subject_data in MLEs_adult_same for trial_data in subject_data])
+min_trial_len_adult_diff = min([len(trial_data) for subject_data in MLEs_adult_diff for trial_data in subject_data])
+min_trial_len_child_same = min([len(trial_data) for subject_data in MLEs_child_same for trial_data in subject_data])
+min_trial_len_child_diff = min([len(trial_data) for subject_data in MLEs_child_diff for trial_data in subject_data])
 
 plt.xlabel('Time (frames, at 60Hz)')
 plt.ylabel('Fraction of trials not on target')
