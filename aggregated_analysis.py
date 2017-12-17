@@ -95,25 +95,32 @@ MLEs_adult_diff = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_
 # print np.array([trial_data[0] for subject_data in MLEs_adult_diff for trial_data in subject_data])
 # print np.array([(trial_data[0] == 0) for subject_data in MLEs_adult_diff for trial_data in subject_data]).mean()
 # 
-# MLEs_child_same = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_data)] for subject_data in data_child_same]
+MLEs_child_same = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_data)] for subject_data in data_child_same]
 # print np.array([trial_data[0] for subject_data in MLEs_child_same for trial_data in subject_data])
 # print np.array([(trial_data[0] == 0) for subject_data in MLEs_child_same for trial_data in subject_data]).mean()
 # 
-# MLEs_child_diff = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_data)] for subject_data in data_child_diff]
+MLEs_child_diff = [[get_trackit_MLE(*trial_data) for trial_data in zip(*subject_data)] for subject_data in data_child_diff]
 # print np.array([trial_data[0] for subject_data in MLEs_child_diff for trial_data in subject_data])
 # print np.array([(trial_data[0] == 0) for subject_data in MLEs_child_diff for trial_data in subject_data]).mean()
 
 # TODO: Compare same and different conditions; is state == 0 much more often for same than for different?
 # No need to continue distinguishing trials from different subjects; replace state with 0 if on target, 1 else
-aligned = jagged_to_numpy([[float(x != 0) for x in trial_data] for subject_data in MLEs_adult_same for trial_data in subject_data])
+aligned_adult_same = jagged_to_numpy([[float(x != 0) for x in trial_data] for subject_data in MLEs_adult_same for trial_data in subject_data])
+aligned_adult_diff = jagged_to_numpy([[float(x != 0) for x in trial_data] for subject_data in MLEs_adult_diff for trial_data in subject_data])
+aligned_child_same = jagged_to_numpy([[float(x != 0) for x in trial_data] for subject_data in MLEs_child_same for trial_data in subject_data])
+aligned_child_diff = jagged_to_numpy([[float(x != 0) for x in trial_data] for subject_data in MLEs_child_diff for trial_data in subject_data])
 
-print 'aligned.shape: ' + str(aligned.shape)
-print 'np.nanmean(aligned, axis = 0).shape: ' + str(np.nanmean(aligned, axis = 0).shape)
-print 'np.nanmean(aligned, axis = 0): ' + str(np.nanmean(aligned, axis = 0))
+plt.plot(np.nanmean(aligned_adult_same, axis = 0))
+plt.plot(np.nanmean(aligned_adult_diff, axis = 0))
+plt.plot(np.nanmean(aligned_child_same, axis = 0))
+plt.plot(np.nanmean(aligned_child_diff, axis = 0))
 
+plt.legend(['Adult Same', 'Adult Diff', 'Child Same', 'Child Diff'])
 
+plt.xlabel('Time (frames, at 60Hz)')
+plt.ylabel('Fraction of trials not on target')
 
-
+plt.show()
 
 
 

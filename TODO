@@ -41,6 +41,13 @@ Things we might want to test:
 - How often do we revert ot target after being distracted?
 
 12/15/17 Meeting Notes
+- Look at data quality of: 
+  - Blinky data (does this improve early-trial performance?)
+  - Baby data
+  - Supervised data
+
+Publication Notes
+
 - CogSci paper on cognitive modeling of 
   - Compare HMM vs. other cognitive models of visual object tracking
     - Regular or supervised TrackIt?
@@ -52,3 +59,4 @@ Things we might want to test:
     - Same versus different conditions (on target more often in same?)
     - Any relationship between eye-tracking and error types?
       - e.g., can we use eye-tracking to bound spatial resolution error?
+
