@@ -1,14 +1,7 @@
 import csv
 import numpy as np
 
-# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/blinky_pilot/"
-# TI_data_dir = "TrackItOutput/0Distractors/"
-# ET_data_dir = "EyeTracker/0Distractors/"
-# TI_fname = "A256_0Dis.csv"
-# ET_fname = "A256_0Dis_2_1_2017_14_32.csv"
-
-# track_it_xy_list, trials_time_list = read_TI_data(TI_file_path):
-def read_TI_data(TI_file_path):
+def read_TI_data(TI_file_path, is_supervised = False):
 
   flag = 0
   start = 0
@@ -24,69 +17,78 @@ def read_TI_data(TI_file_path):
   distractors_x_list = []
   distractors_y_list = []
   distractors_xy_list = []
+  if is_supervised:
+    labels_list = []
 
   with open(TI_file_path, 'rb') as TI_file:
     reader = csv.reader(TI_file, delimiter = ',')
 
     for row in reader:
       if startTime_flag == 1:
-          absolute_start = float(row[2])
-          startTime_flag = 0
-      if len(row)>0 and row[0] == "END New Trial":
-          trials_time_list.append([start, end])
-          track_it_xy_list.append([trial_x_list,trial_y_list])
-          distractors_xy_list.append(list(zip(map(list, zip(*distractors_x_list)),map(list, zip(*distractors_y_list)))))
-          flag = 0
+        absolute_start = float(row[2])
+        startTime_flag = 0
+      if len(row) > 0 and row[0] == "END New Trial":
+        trials_time_list.append([start, end])
+        track_it_xy_list.append([trial_x_list,trial_y_list])
+        distractors_xy_list.append(list(zip(map(list, zip(*distractors_x_list)),map(list, zip(*distractors_y_list)))))
+        if is_supervised:
+          labels_list.append(trial_labels)
+        flag = 0
     
       if flag != 0:
-          if flag == 1:
-              if add_absolute:
-                  start = float(row[0])+absolute_start
-              else:
-                  start = float(row[1])
-              trial_x_list = []
-              trial_y_list = []
-              distractors_x_list = []
-              distractors_y_list = []
-              flag = 2
-    
-          trial_x_list.append(float(row[index]))        
-          trial_y_list.append(float(row[index+1]))
-    
-          temp_x = []
-          temp_y = []
+        if flag == 1:
           if add_absolute:
-              end = float(row[0])+absolute_start
-              for i in range(1,len(row)):
-                  if i % 2 == 1 and i != index:
-                      temp_x.append(float(row[i]))
-                  elif i % 2 == 0 and i != index+1:
-                      temp_y.append(float(row[i]))
+            start = float(row[0]) + absolute_start
           else:
-              end = float(row[1])
-              for i in range(2,len(row)):
-                  if i % 2 == 0 and i != index:
-                      temp_x.append(float(row[i]))
-                  elif i % 2 == 1 and i != index+1:
-                      temp_y.append(float(row[i]))
+            start = float(row[1])
+          trial_x_list = []
+          trial_y_list = []
+          distractors_x_list = []
+          distractors_y_list = []
+          if is_supervised:
+            trial_labels = []
+          flag = 2
     
-          # x_min = min(x_min, min(temp_x))
-          # x_max = max(x_max, max(temp_x))
-          # y_min = min(y_min, min(temp_y))
-          # y_max = max(y_max, max(temp_y))
-          distractors_x_list.append(temp_x)
-          distractors_y_list.append(temp_y)
+        trial_x_list.append(float(row[index]))
+        trial_y_list.append(float(row[index + 1]))
+        if is_supervised:
+          trial_labels.append(int(row[labels_index]))
+          del row[labels_index]
+    
+        temp_x = []
+        temp_y = []
+        if add_absolute:
+          end = float(row[0]) + absolute_start
+          for i in range(1,len(row)):
+            if i % 2 == 1 and i != index:
+              temp_x.append(float(row[i]))
+            elif i % 2 == 0 and i != index + 1:
+              temp_y.append(float(row[i]))
+        else:
+          end = float(row[1])
+          for i in range(2,len(row)):
+            if i % 2 == 0 and i != index:
+              temp_x.append(float(row[i]))
+            elif i % 2 == 1 and i != index + 1:
+              temp_y.append(float(row[i]))
+    
+        distractors_x_list.append(temp_x)
+        distractors_y_list.append(temp_y)
     
       if "target" in row:
-          index = row.index("target")
+        index = row.index("target")
       if len(row) > 0 and row[0] == "Frame Timestamp (Relative)":
-          flag = 1
+        flag = 1
       if len(row) > 0 and row[0] == "Frame Timestamp":
-          flag = 1
-          add_absolute = True
+        flag = 1
+        add_absolute = True
       if "startTime" in row:
-          startTime_flag = 1
+        startTime_flag = 1
+      if is_supervised and "Blinking object index" in row:
+        labels_index = row.index("Blinking object index")
 
+  if is_supervised:
+    return track_it_xy_list, distractors_xy_list, trials_time_list, labels_list
   return track_it_xy_list, distractors_xy_list, trials_time_list
 
 # Examples:
@@ -188,26 +190,31 @@ def filter_trackit(track_it_xy_list, to_keep):
   track_it_xy_list = [track_it_xy_list[trial] for trial in to_keep]
   return track_it_xy_list
 
-def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0):
-  track_it_xy_list, distractors_xy_list, trials_time_list = read_TI_data(TI_file_path)
+def load_full_subject_data(TI_file_path, ET_file_path, filter_threshold = 1.0, is_supervised = False):
+  if is_supervised:
+    track_it_xy_list, distractors_xy_list, trials_time_list, labels_list = read_TI_data(TI_file_path, is_supervised = True)
+  else:
+    track_it_xy_list, distractors_xy_list, trials_time_list = read_TI_data(TI_file_path)
   eye_track_xy_list, trials_to_keep = read_ET_data(ET_file_path, trials_time_list, filter_threshold = filter_threshold)
   track_it_xy_list = filter_trackit(track_it_xy_list, trials_to_keep)
   distractors_xy_list = filter_trackit(distractors_xy_list, trials_to_keep)
+  if is_supervised:
+    labels_list = filter_trackit(labels_list, trials_to_keep)
   num_trials = len(track_it_xy_list)
 
-
   # Convert each trial's data to a numpy array.
-  # Along the way, synchronize eyetracking and TrackIt and impute missing data, using functions from util.
   eyetrack = []
   target = []
   distractors = []
+  if is_supervised:
+    labels = []
   for trial_idx in range(num_trials):
     eyetrack.append(np.array(eye_track_xy_list[trial_idx]))
     target.append(np.array(track_it_xy_list[trial_idx]))
     distractors.append(np.array(distractors_xy_list[trial_idx]))
-    # distractors_old = np.array(distractors_xy_list[trial_idx])
-    # distractors.append(np.zeros(distractors_old.shape))
-    # for k in range(distractors[0].shape[0]):
-    #   distractors[trial_idx][k,:,:] = np.array(distractors_old[k,:,:])
+    if is_supervised:
+      labels.append(np.array(labels_list[trial_idx], dtype = int))
+
+  if is_supervised:
+    return eyetrack, target, distractors, labels
   return eyetrack, target, distractors
-  # return track_it_xy_list, distractors_xy_list, eye_track_xy_list
