@@ -29,21 +29,20 @@ Trial start - estimate from data
 
 More elaborate transition matrix, incorporating distances between objects (maybe hard-coded step-function)
 
-The most important parameter is the variance, sigma2, of the
-
 Things we might want to test:
 - How often are we in the target state?
+  - How does this differ between all-same and all-different conditions?
 - How often do we start at the target state?
+  - Does this differ between all-same and all-different conditions?
 - How often do we end at the target state?
   - How does this differ between memory-correct and memory-incorrect trials?
 - How often do we switch targets?
   - This is highly sensitive to parameters
-- How often do we revert ot target after being distracted?
+- How often do we revert to target after being distracted?
 
 12/15/17 Meeting Notes
 - Look at data quality of: 
   - Blinky data (does this improve early-trial performance?)
-  - Baby data
   - Supervised data
 
 Publication Notes

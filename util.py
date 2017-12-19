@@ -13,14 +13,16 @@ def jagged_to_numpy(jagged):
   return aligned
 
 # Data preprocessing steps: impute missing eye-tracking data and synchronize by interpolating TrackIt data
-def preprocess_all(eyetrack, target, distractors):
+def preprocess_all(eyetrack, target, distractors, labels = None):
   for trial_idx in range(len(eyetrack)):
     N = len(eyetrack[trial_idx][0]) # Number of eye-tracking frames in trial
     eyetrack[trial_idx] = impute_missing_data_D(eyetrack[trial_idx])
     target[trial_idx] = interpolate_to_length_D(target[trial_idx], N)
     if distractors[trial_idx].size > 0: # For 0 distractor condition
       distractors[trial_idx] = interpolate_to_length_distractors(distractors[trial_idx], N)
-  return eyetrack, target, distractors
+      if labels != None:
+        labels[trial_idx] = __interpolate_to_length_labels(labels[trial_idx], N)
+  return eyetrack, target, distractors, labels
 
 # Given a K x D x N array of numbers, encoding the positions of each of K D-dimensional objects over N time points,
 # performs interpolate_to_length_D (independently) on each object in X
