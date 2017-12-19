@@ -4,22 +4,21 @@ import util
 from scipy.stats import multivariate_normal
 from math import log
 
-sigma2 = 100 ** 2 # spherical emission variance (i.e., E[||X - E[X]||_2^2])
-
-def get_trackit_MLE(eye_track, target, distractors):
+# sigma2 - spherical emission variance (i.e., E[||X - E[X]||_2^2])
+def get_trackit_MLE(eye_track, target, distractors, sigma2 = 100 ** 2):
  
   X = eye_track.swapaxes(0, 1)
   mu = np.concatenate((target[None, :, :], distractors)).swapaxes(1, 2)
-  return get_MLE(X, mu)
+  return get_MLE(X, mu, sigma2 = sigma2)
 
-def get_MLE(X, mu): 
+def get_MLE(X, mu, sigma2 = 100 ** 2): 
 
   # For now, just hardcode model parameters
   trans_prob = 0.0001 # Probability of transitioning between any pair of states
   n_states = mu.shape[0]
   pi = np.ones(n_states) / n_states # Uniform starting probabilities
   Pi = (1 - n_states*trans_prob) * np.identity(n_states) + trans_prob * np.ones((n_states,n_states))
-  return viterbi(X, mu, pi, Pi)
+  return __viterbi(X, mu, pi, Pi)
 
 # In the following,
 #   N denotes the length (in frames) of the trial
@@ -29,7 +28,7 @@ def get_MLE(X, mu):
 # mu is a K x N x 2 matrix (x,y) object positions for each object
 # pi is a K-vector of initial probabilities of each state
 # Pi is a K x K matrix of transition probabilities between each pair of states
-def viterbi(X, mu, pi, Pi):
+def __viterbi(X, mu, pi, Pi, sigma2 = 100 ** 2):
 
   N = X.shape[0]
   K = mu.shape[0]
@@ -64,7 +63,7 @@ def viterbi(X, mu, pi, Pi):
     MLE[n] = S[n, MLE[n + 1]]
   return MLE
 
-def log_emission_prob(X, mu):
+def log_emission_prob(X, mu, sigma2 = 100 ** 2):
   # Add singleton dimension using None because log_multivariate_normal_density is written for
   # multiple samples, but we only need it for 1
   return multivariate_normal.logpdf(X, mean = mu, cov = sigma2 * np.identity(2))
