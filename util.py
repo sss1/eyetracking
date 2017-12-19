@@ -24,6 +24,26 @@ def preprocess_all(eyetrack, target, distractors, labels = None):
         labels[trial_idx] = __interpolate_to_length_labels(labels[trial_idx], N)
   return eyetrack, target, distractors, labels
 
+def __interpolate_to_length_labels(X, N):
+  change_points = np.where(X[:-1] != X[1:])[0]
+  X_new = np.zeros(N, dtype = int)
+  upsample_rate = float(N) / len(X)
+  for change_point_idx in range(len(change_points)):
+    change_point = change_points[change_point_idx]
+    if change_point_idx == 0:
+      prev_change_point = 0
+    new_segment_start = int(math.ceil(prev_change_point * upsample_rate))
+    new_segment_end = int(math.ceil(change_point * upsample_rate)) + 1
+    X_new[new_segment_start:new_segment_end] = X[prev_change_point]
+    prev_change_point = change_point
+    print(change_point)
+    X_new[prev_change_point:] = X[prev_change_point]
+  return X_new
+
+x = np.array([0, 0, 0, 1, 1, 0], dtype = int)
+print x
+print __interpolate_to_length_labels(x,len(x))
+
 # Given a K x D x N array of numbers, encoding the positions of each of K D-dimensional objects over N time points,
 # performs interpolate_to_length_D (independently) on each object in X
 def interpolate_to_length_distractors(X, new_len):
