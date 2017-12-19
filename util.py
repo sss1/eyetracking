@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from itertools import chain, izip
 
 # Euclidean distance error
 def error_fcn(et_x, et_y, trackit_x, trackit_y):
@@ -43,6 +44,17 @@ def __interpolate_to_length_labels(X, N):
 x = np.array([0, 0, 0, 1, 1, 0], dtype = int)
 print x
 print __interpolate_to_length_labels(x,len(x))
+
+raise ValueException('Not yet implemented!')
+# TODO: Implement this using explicit change points!
+# X is a 1D numpy array of ints
+def interpolate_to_length_labels(X, new_len):
+  change_points = np.where(X[:-1] != X[1:])
+
+X = np.array([0, 0, 0, 0, 1, 1, 0, 1])
+print X
+print interpolate_to_length_labels(X, 16)
+print interpolate_to_length_labels(X, 17)
 
 # Given a K x D x N array of numbers, encoding the positions of each of K D-dimensional objects over N time points,
 # performs interpolate_to_length_D (independently) on each object in X
@@ -97,13 +109,16 @@ def __impute_missing_data(X, max_len):
         if n - (max_len + 1) <= last_valid_idx: # amount of missing data is at most than max_len
           if last_valid_idx == -1: # No previous valid data (i.e., first timepoint is missing)
             X[0:n] = X[n] # Just propogate first valid data point
-          # TODO: we should probably also propogate the last valid data point
-          # when data is missing at the end of a trial
+          # TODO: we should probably also propogate the last valid data point when missing data at the end of a trial
           else:
             first_last = np.array([X[last_valid_idx], X[n]]) # initial and final values from which to linearly interpolate
             new_len = n - last_valid_idx + 1
             X[last_valid_idx:(n + 1)] = np.interp([float(x)/(new_len - 1) for x in range(new_len)], [0, 1], first_last)
       last_valid_idx = n
+    elif n == len(X) - 1: # if n is the last index of X and X[n] is NaN
+      if n - (max_len + 1) <= last_valid_idx: # amount of missing data is at most than max_len
+        X[last_valid_idx:] = X[last_valid_idx]
+        print 'Interpolated end of trial'
   return X
 
 # X = np.array([1, 2, 3])
