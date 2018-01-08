@@ -37,20 +37,14 @@ data_child_super = [subject_data[0:3] for subject_data in data_child_super]
 flattened_data = [trial_data for subject_data in data_child_super for trial_data in zip(*subject_data)]
 
 # Flatten labels into frames (i.e., across subject and trials)
-flattened_labels = [frame_data for subject_data in labels for trial_data in subject_data for frame_data in trial_data]
+flattened_labels = np.array([frame_data for subject_data in labels for trial_data in subject_data for frame_data in trial_data], dtype = int)
 
 # Range of variance values to try
-sigma2s = np.logspace(1, 4, num = 10)
-
-def compute_estimation_error(estimated_states, true_states):
-  err = np.array([compute_trial_estimation_error(*trial_data) for trial_data in zip(estimated_states, true_states)]).mean()
-  print 'Error: ' + str(err)
-  return err
-
-def compute_trial_estimation_error(estimated_trial_states, true_trial_states):
-  return (estimated_trial_states != true_trial_states).mean()
+sigma2s = np.logspace(2, 8, num = 25)
 
 for sigma2 in sigma2s:
   MLEs_child_super = [get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
-  MLEs_flattened = [frame_data for trial_data in MLEs_child_super for frame_data in trial_data] # flatten MLEs across trials
-  print 'For sigma2 = ' + str(sigma2) + ', the error is ' + str(compute_estimation_error(MLEs_flattened, flattened_labels)) + '.'
+  MLEs_flattened = np.array([frame_data for trial_data in MLEs_child_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
+  err = (MLEs_flattened[MLEs_flattened != -1] != flattened_labels[MLEs_flattened != -1]).mean() # For now, ignore frames with missing data
+  # print 'Couldn\'t classify ' + str((MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
+  print str(sigma2) + ', ' + str(err)

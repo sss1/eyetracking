@@ -18,7 +18,7 @@ def get_MLE(X, mu, sigma2 = 100 ** 2):
   n_states = mu.shape[0]
   pi = np.ones(n_states) / n_states # Uniform starting probabilities
   Pi = (1 - n_states*trans_prob) * np.identity(n_states) + trans_prob * np.ones((n_states,n_states))
-  return __viterbi(X, mu, pi, Pi)
+  return __viterbi(X, mu, pi, Pi, sigma2 = sigma2)
 
 # In the following,
 #   N denotes the length (in frames) of the trial
@@ -35,16 +35,18 @@ def __viterbi(X, mu, pi, Pi, sigma2 = 100 ** 2):
   T = np.zeros((N, K)) # For each state at each timepoint, the maximum likelihood of any path to that state
   S = np.zeros((N - 1, K), dtype = np.int) # For each state, the most likely previous state
 
+  # print 'N: ' + str(N) + ' K: ' + str(K) + ' T.shape: ' + str(T.shape) + ' S.shape: ' + str(S.shape)
+
   # For each state at each point in time, compute the maximum likelihood (over
   # paths) of ending up at that state
   for k in range(K): # First state likelhoods are based on starting probabilities
-    T[0, k] = log(pi[k]) + log_emission_prob(X[0, :], mu[k, 0, :])
+    T[0, k] = log(pi[k]) + log_emission_prob(X[0, :], mu[k, 0, :], sigma2 = sigma2)
   for n in range(1, N): # time step
     for k in range(K): # current state
       max_likelihood = float("-inf")
       max_idx = -1
       for j in range(K): # previous state
-        next_likelihood = T[n - 1, j] + log(Pi[j, k]) + log_emission_prob(X[n, :], mu[k, n, :])
+        next_likelihood = T[n - 1, j] + log(Pi[j, k]) + log_emission_prob(X[n, :], mu[k, n, :], sigma2 = sigma2)
         # print('Setting next_likelihood[' + str(n) + '] to ' + str(next_likelihood))
         # if next_likelihood != next_likelihood:
         #   print('X[n, :]: ' + str(X[n, :]))
