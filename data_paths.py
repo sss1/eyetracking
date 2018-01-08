@@ -134,20 +134,20 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
 eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
-                                   "A250switch_12_13_2017_9_16.csv", \
-                                   "A252switch_12_13_2017_10_40.csv", \
-                                   # "A269switch_12_14_2017_13_43.csv", \ # difficulty calibrating
-                                   "a306SWITCH_12_13_2017_10_27.csv", \
-                                   "A309switch_12_13_2017_10_53.csv", \
-                                   "A310switch_12_14_2017_14_5.csv"]
+                                    "A250switch_12_13_2017_9_16.csv", \
+                                    "A252switch_12_13_2017_10_40.csv", \
+                                    # "A269switch_12_14_2017_13_43.csv", \ # difficulty calibrating
+                                    "a306SWITCH_12_13_2017_10_27.csv", \
+                                    "A309switch_12_13_2017_10_53.csv", \
+                                    "A310switch_12_14_2017_14_5.csv"]
 
 trackit_fnames_child_supervised = ["A225blink.csv", \
-                                    "a250switch.csv", \
-                                    "A252switch.csv", \
-                                    # "a269switch.csv", \ # difficulty calibrating
-                                    "A306switch.csv", \
-                                    "A309switch.csv", \
-                                    "a310switch.csv"]
+                                   "a250switch.csv", \
+                                   "A252switch.csv", \
+                                   # "a269switch.csv", \ # difficulty calibrating
+                                   "A306switch.csv", \
+                                   "A309switch.csv", \
+                                   "a310switch.csv"]
 
 
 trackit_fnames_adult_0dis  = [root + "adult_pilot/TrackItOutput/0Distractors/" + fname for fname in trackit_fnames_adult_0dis]
