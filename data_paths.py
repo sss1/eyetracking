@@ -1,5 +1,5 @@
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
 # root = "/home/sss1/Desktop/academic/projects/eyetracking/" # Home desktop
 
 trackit_fnames_adult_0dis = ["Anna0dis.csv", \
@@ -133,7 +133,7 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
-trackit_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
+eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
                                    "A250switch_12_13_2017_9_16.csv", \
                                    "A252switch_12_13_2017_10_40.csv", \
                                    # "A269switch_12_14_2017_13_43.csv", \ # difficulty calibrating
@@ -141,7 +141,7 @@ trackit_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
                                    "A309switch_12_13_2017_10_53.csv", \
                                    "A310switch_12_14_2017_14_5.csv"]
 
-eyetrack_fnames_child_supervised = ["A225blink.csv", \
+trackit_fnames_child_supervised = ["A225blink.csv", \
                                     "a250switch.csv", \
                                     "A252switch.csv", \
                                     # "a269switch.csv", \ # difficulty calibrating
@@ -162,5 +162,5 @@ trackit_fnames_child_same  = [root + "3yo/TrackItOutput/AllSame/" + fname for fn
 eyetrack_fnames_child_same = [root + "3yo/EyeTracker/AllSame/" + fname for fname in eyetrack_fnames_child_same]
 trackit_fnames_child_diff = [root + "3yo/TrackItOutput/AllDiff/" + fname for fname in trackit_fnames_child_diff]
 eyetrack_fnames_child_diff = [root + "3yo/EyeTracker/AllDiff/" + fname for fname in eyetrack_fnames_child_diff]
-trackit_fnames_child_supervised = [root + "switch_calibration/EyeTracker/" + fname for fname in trackit_fnames_child_supervised]
-eyetrack_fnames_child_supervised = [root + "switch_calibration/TrackItOutput/" + fname for fname in eyetrack_fnames_child_supervised]
+trackit_fnames_child_supervised = [root + "switch_calibration/TrackItOutput/" + fname for fname in trackit_fnames_child_supervised]
+eyetrack_fnames_child_supervised = [root + "switch_calibration/EyeTracker/" + fname for fname in eyetrack_fnames_child_supervised]

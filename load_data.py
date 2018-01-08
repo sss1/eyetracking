@@ -1,9 +1,10 @@
 import csv
 import numpy as np
+import time
 
 def read_TI_data(TI_file_path, is_supervised = False):
 
-  flag = 0
+  flag = 0 # 0 does nothing, 1 
   start = 0
   end = 0
   index = 0 # target index
@@ -34,7 +35,7 @@ def read_TI_data(TI_file_path, is_supervised = False):
         if is_supervised:
           labels_list.append(trial_labels)
         flag = 0
-    
+
       if flag != 0:
         if flag == 1:
           if add_absolute:
@@ -48,13 +49,13 @@ def read_TI_data(TI_file_path, is_supervised = False):
           if is_supervised:
             trial_labels = []
           flag = 2
-    
+
         trial_x_list.append(float(row[index]))
         trial_y_list.append(float(row[index + 1]))
         if is_supervised:
           trial_labels.append(int(row[labels_index]))
           del row[labels_index]
-    
+
         temp_x = []
         temp_y = []
         if add_absolute:
@@ -71,10 +72,10 @@ def read_TI_data(TI_file_path, is_supervised = False):
               temp_x.append(float(row[i]))
             elif i % 2 == 1 and i != index + 1:
               temp_y.append(float(row[i]))
-    
+
         distractors_x_list.append(temp_x)
         distractors_y_list.append(temp_y)
-    
+
       if "target" in row:
         index = row.index("target")
       if len(row) > 0 and row[0] == "Frame Timestamp (Relative)":

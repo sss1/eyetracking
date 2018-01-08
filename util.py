@@ -26,35 +26,30 @@ def preprocess_all(eyetrack, target, distractors, labels = None):
   return eyetrack, target, distractors, labels
 
 def __interpolate_to_length_labels(X, N):
+  if not N == int(N):
+    raise ValueError('New length must be an integer, but is ' + str(N))
+  N = int(N)
   change_points = np.where(X[:-1] != X[1:])[0]
   X_new = np.zeros(N, dtype = int)
   upsample_rate = float(N) / len(X)
   for change_point_idx in range(len(change_points)):
-    change_point = change_points[change_point_idx]
+    change_point = change_points[change_point_idx] + 1
     if change_point_idx == 0:
       prev_change_point = 0
     new_segment_start = int(math.ceil(prev_change_point * upsample_rate))
-    new_segment_end = int(math.ceil(change_point * upsample_rate)) + 1
+    new_segment_end = int(math.ceil(change_point * upsample_rate))
+    X_new[new_segment_start:new_segment_end] = X[prev_change_point]
+    # print str((prev_change_point, change_point, new_segment_start, new_segment_end))
     X_new[new_segment_start:new_segment_end] = X[prev_change_point]
     prev_change_point = change_point
-    print(change_point)
-    X_new[prev_change_point:] = X[prev_change_point]
+  # TODO: Manually handle last change point!
   return X_new
 
-x = np.array([0, 0, 0, 1, 1, 0], dtype = int)
-print x
-print __interpolate_to_length_labels(x,len(x))
-
-raise ValueException('Not yet implemented!')
-# TODO: Implement this using explicit change points!
-# X is a 1D numpy array of ints
-def interpolate_to_length_labels(X, new_len):
-  change_points = np.where(X[:-1] != X[1:])
-
-X = np.array([0, 0, 0, 0, 1, 1, 0, 1])
-print X
-print interpolate_to_length_labels(X, 16)
-print interpolate_to_length_labels(X, 17)
+# X = np.array([0, 0, 0, 0, 1, 1, 0, 1])
+# print X
+# print __interpolate_to_length_labels(X, len(X))
+# print __interpolate_to_length_labels(X, 2*len(X))
+# print __interpolate_to_length_labels(X, 2.5*len(X))
 
 # Given a K x D x N array of numbers, encoding the positions of each of K D-dimensional objects over N time points,
 # performs interpolate_to_length_D (independently) on each object in X
@@ -109,7 +104,6 @@ def __impute_missing_data(X, max_len):
         if n - (max_len + 1) <= last_valid_idx: # amount of missing data is at most than max_len
           if last_valid_idx == -1: # No previous valid data (i.e., first timepoint is missing)
             X[0:n] = X[n] # Just propogate first valid data point
-          # TODO: we should probably also propogate the last valid data point when missing data at the end of a trial
           else:
             first_last = np.array([X[last_valid_idx], X[n]]) # initial and final values from which to linearly interpolate
             new_len = n - last_valid_idx + 1
@@ -118,7 +112,6 @@ def __impute_missing_data(X, max_len):
     elif n == len(X) - 1: # if n is the last index of X and X[n] is NaN
       if n - (max_len + 1) <= last_valid_idx: # amount of missing data is at most than max_len
         X[last_valid_idx:] = X[last_valid_idx]
-        print 'Interpolated end of trial'
   return X
 
 # X = np.array([1, 2, 3])
