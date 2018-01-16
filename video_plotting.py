@@ -50,7 +50,7 @@ for trial_idx in trials_to_show:
   target = target_all_trials[trial_idx]
   distractors = distractors_all_trials[trial_idx]
 
-  MLE = get_trackit_MLE(eyetrack, target, distractors)
+  MLE = get_trackit_MLE(eyetrack, target, distractors, sigma2 = 400 ** 2)
   print 'MLE: '
   print MLE
   print 'True target: '
