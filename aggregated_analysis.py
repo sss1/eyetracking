@@ -115,7 +115,7 @@ print 'Child Diff: ' + str(np.mean(np.isnan([x for subject_data in data_child_di
 #          MLEs_child_same = MLEs_child_same, \
 #          MLEs_child_diff = MLEs_child_diff)
 
-MLEs_cache_file = np.load(dp.root + 'tmp/' + 'MLEs_all.npz')
+MLEs_cache_file = np.load(dp.root + 'cache/' + 'MLEs_all.npz')
 
 MLEs_adult_same = MLEs_cache_file['MLEs_adult_same']
 MLEs_adult_diff = MLEs_cache_file['MLEs_adult_diff']

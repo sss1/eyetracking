@@ -8,7 +8,7 @@ import data_paths as dp
 from eyetracking_hmm import get_trackit_MLE
 from util import preprocess_all
 
-outfile = 'supervised_analysis.csv'
+outfile = dp.root + 'cache/' + 'supervised_analysis.csv'
 
 # Load and preprocess data
 data_child_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_child_supervised, dp.eyetrack_fnames_child_supervised)]
