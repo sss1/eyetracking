@@ -23,7 +23,10 @@ def preprocess_all(eyetrack, target, distractors, labels = None):
       distractors[trial_idx] = interpolate_to_length_distractors(distractors[trial_idx], N)
       if labels != None:
         labels[trial_idx] = __interpolate_to_length_labels(labels[trial_idx], N)
-  return eyetrack, target, distractors, labels
+
+  if labels != None:
+    return eyetrack, target, distractors, labels
+  return eyetrack, target, distractors
 
 def __interpolate_to_length_labels(X, N):
   if not N == int(N):
