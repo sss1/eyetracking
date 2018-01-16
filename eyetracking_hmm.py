@@ -13,8 +13,9 @@ def get_trackit_MLE(eye_track, target, distractors, sigma2 = 100 ** 2):
 
 def get_MLE(X, mu, sigma2 = 100 ** 2): 
 
-  # For now, just hardcode model parameters
-  trans_prob = 0.0001 # Probability of transitioning between any pair of states
+  # For now, just hardcode reasonable guesses of model parameters
+  trans_prob = 0.003 # Probability of transitioning between any pair of states # was originally 0.0001
+  # The guess of 0.003 corresponds to an average of 3 switches per 1000 frames, or roughly once every 5.55 seconds
   n_states = mu.shape[0]
   pi = np.ones(n_states) / n_states # Uniform starting probabilities
   Pi = (1 - n_states*trans_prob) * np.identity(n_states) + trans_prob * np.ones((n_states,n_states))
@@ -39,6 +40,8 @@ def __viterbi(X, mu, pi, Pi, sigma2 = 100 ** 2):
 
   # For each state at each point in time, compute the maximum likelihood (over
   # paths) of ending up at that state
+  # Note that, whenever X[n,:] is [nan, nan] (i.e., eye-tracking data is missing),
+  # this sets T[n, k] = -inf and S[n - 1, :] = [-1,...,-1]
   for k in range(K): # First state likelhoods are based on starting probabilities
     T[0, k] = log(pi[k]) + log_emission_prob(X[0, :], mu[k, 0, :], sigma2 = sigma2)
   for n in range(1, N): # time step
@@ -46,11 +49,12 @@ def __viterbi(X, mu, pi, Pi, sigma2 = 100 ** 2):
       max_likelihood = float("-inf")
       max_idx = -1
       for j in range(K): # previous state
-        next_likelihood = T[n - 1, j] + log(Pi[j, k]) + log_emission_prob(X[n, :], mu[k, n, :], sigma2 = sigma2)
-        # print('Setting next_likelihood[' + str(n) + '] to ' + str(next_likelihood))
-        # if next_likelihood != next_likelihood:
-        #   print('X[n, :]: ' + str(X[n, :]))
-        #   raise Exception('Likelihood is nan')
+        # if previous sample is NaN and this one is valid (not NaN), then use initial probabilities pi
+        if np.isnan(X[n - 1, 0]) and not np.isnan(X[n, 0]):
+          assert(T[n - 1, j] == float("-inf"))
+          next_likelihood = pi[k] + log_emission_prob(X[n, :], mu[k, n, :], sigma2 = sigma2)
+        else:
+          next_likelihood = T[n - 1, j] + log(Pi[j, k]) + log_emission_prob(X[n, :], mu[k, n, :], sigma2 = sigma2)
         if next_likelihood > max_likelihood:
           max_likelihood = next_likelihood
           max_idx = j
@@ -60,9 +64,17 @@ def __viterbi(X, mu, pi, Pi, sigma2 = 100 ** 2):
   # Having computed all the most likely paths to each final states, extract the
   # most likely sequence of states
   MLE = np.zeros((N,), dtype = np.int) # Final most likely sequence of states
-  MLE[N - 1] = np.argmax(T[N - 1, :])
-  for n in reversed(range(N - 1)):
-    MLE[n] = S[n, MLE[n + 1]]
+  for n in reversed(range(N)):
+    if np.isnan(X[n, 0]):
+      MLE[n] = -1
+    elif n == N - 1 or np.isnan(X[n + 1, 0]): # last valid sample before trial end or an interval of NaNs
+      MLE[n] = np.argmax(T[n, :])
+    else:
+      MLE[n] = S[n, MLE[n + 1]]
+    if np.isnan(X[n, 0]):
+      assert MLE[n] == -1
+    else:
+      assert MLE[n] > -1
   return MLE
 
 def log_emission_prob(X, mu, sigma2 = 100 ** 2):
