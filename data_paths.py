@@ -133,6 +133,12 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
+eyetrack_fnames_adult_supervised = ["jaeah_supervised_blinky_1_16_2018_17_28.csv", \
+                                    "shashank_supervised_blinky_1_16_2018_17_41.csv"]
+
+trackit_fnames_adult_supervised = ["Jaeah_supervised_blinky.csv", \
+                                   "Shashank_supervised_blinky.csv"]
+
 eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
                                     "A250switch_12_13_2017_9_16.csv", \
                                     "A252switch_12_13_2017_10_40.csv", \
@@ -148,6 +154,7 @@ trackit_fnames_child_supervised = ["A225blink.csv", \
                                    "A306switch.csv", \
                                    "A309switch.csv", \
                                    "a310switch.csv"]
+
 
 
 trackit_fnames_adult_0dis  = [root + "adult_pilot/TrackItOutput/0Distractors/" + fname for fname in trackit_fnames_adult_0dis]
