@@ -45,7 +45,7 @@ def __interpolate_to_length_labels(X, N):
     # print str((prev_change_point, change_point, new_segment_start, new_segment_end))
     X_new[new_segment_start:new_segment_end] = X[prev_change_point]
     prev_change_point = change_point
-  # TODO: Manually handle last change point!
+  X_new[new_segment_end:] = X[-1] # manually fill-in after last change point
   return X_new
 
 # X = np.array([0, 0, 0, 0, 1, 1, 0, 1])

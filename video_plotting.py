@@ -9,13 +9,13 @@ np.set_printoptions(threshold = np.nan)
 
 # Specify data to display
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/" # Laptop
-root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
-subject_type = "switch_calibration/" # "adult_pilot/" # "3yo/" 
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
+# root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
+subject_type = "switch_calibration/adult/" # "adult_pilot/" # "3yo/" 
 TI_data_dir = "TrackItOutput/"# AllSame/"
 ET_data_dir = "EyeTracker/"# AllSame/"
-TI_fname = "a310switch.csv" # "AnnaSame.csv" # "shashank.csv" # "A232Same.csv" 
-ET_fname = "A310switch_12_14_2017_14_5.csv" # "AnnaSame_9_13_2016_13_25.csv" # "shashank1_12_5_2017_13_41.csv" # "A232Same_3_29_2016_10_26.csv" 
+TI_fname = "Jaeah_supervised_blinky.csv" # "AnnaSame.csv" # "shashank.csv" # "A232Same.csv" 
+ET_fname = "jaeah_supervised_blinky_1_16_2018_17_28.csv" # "shashank_supervised_blinky_1_16_2018_17_41.csv" # "AnnaSame_9_13_2016_13_25.csv" # "shashank1_12_5_2017_13_41.csv" # "A232Same_3_29_2016_10_26.csv" 
 TI_file_path = root + subject_type + TI_data_dir + TI_fname
 ET_file_path = root + subject_type + ET_data_dir + ET_fname
 print 'Track-It file: ' + TI_file_path
@@ -28,8 +28,8 @@ eyetrack_all_trials, target_all_trials, distractors_all_trials, labels_all_trial
                             is_supervised = True)
 
 # Data preprocessing steps: impute missing eye-tracking data and synchronize by interpolating TrackIt data
-eyetrack_all_trials, target_all_trials, distractors_all_trials = \
-  preprocess_all(eyetrack_all_trials, target_all_trials, distractors_all_trials)
+eyetrack_all_trials, target_all_trials, distractors_all_trials, labels_all_trials = \
+  preprocess_all(eyetrack_all_trials, target_all_trials, distractors_all_trials, labels_all_trials)
 
 # boundaries of track-it grid
 x_min = 400
@@ -44,6 +44,14 @@ lag = 10 # plot a time window of length lag, so we can see the trajectory more c
 trials_to_show = range(len(target_all_trials))
 print 'Number of trials: ' + str(len(trials_to_show))
 
+
+for trial_idx in trials_to_show:
+  eyetrack = eyetrack_all_trials[trial_idx]
+  target = target_all_trials[trial_idx]
+  distractors = distractors_all_trials[trial_idx]
+  MLE = get_trackit_MLE(eyetrack, target, distractors, sigma2 = 400 ** 2)
+  print np.mean(MLE == labels_all_trials[trial_idx])
+
 for trial_idx in trials_to_show:
 
   eyetrack = eyetrack_all_trials[trial_idx]
@@ -55,6 +63,10 @@ for trial_idx in trials_to_show:
   print MLE
   print 'True target: '
   print labels_all_trials[trial_idx]
+
+  print len(MLE)
+  print len(labels_all_trials[trial_idx])
+  print np.mean(MLE == labels_all_trials[trial_idx])
 
   trial_length = target.shape[1]
   print 'Plotting trial ' + str(trial_idx) + ' with length ' + str(trial_length) + '.'

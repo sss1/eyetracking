@@ -12,17 +12,25 @@ outfile = dp.root + 'cache/' + 'supervised_analysis.csv'
 
 # Load and preprocess data
 data_child_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_child_supervised, dp.eyetrack_fnames_child_supervised)]
+data_adult_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_adult_supervised, dp.eyetrack_fnames_adult_supervised)]
+
 print '\nMissing data before interpolation:'
 print np.mean(np.isnan([x for subject_data in data_child_super for trial_data in subject_data[0] for x in trial_data[0]]))
-data_child_super = [preprocess_all(*subject_data) for subject_data in data_child_super]
+print np.mean(np.isnan([x for subject_data in data_adult_super for trial_data in subject_data[0] for x in trial_data[0]]))
 
+# Preprocess data
+data_child_super = [preprocess_all(*subject_data) for subject_data in data_child_super]
+data_adult_super = [preprocess_all(*subject_data) for subject_data in data_adult_super]
 
 # Split off true labels from unsupervised data
-labels = [subject_data[3] for subject_data in data_child_super]
+child_labels = [subject_data[3] for subject_data in data_child_super]
 data_child_super = [subject_data[0:3] for subject_data in data_child_super]
+adult_labels = [subject_data[3] for subject_data in data_adult_super]
+data_adult_super = [subject_data[0:3] for subject_data in data_adult_super]
 
 print '\nMissing data after interpolation:'
 print np.mean(np.isnan([x for subject_data in data_child_super for trial_data in subject_data[0] for x in trial_data[0]]))
+print np.mean(np.isnan([x for subject_data in data_adult_super for trial_data in subject_data[0] for x in trial_data[0]]))
 
 # # For a range of thresholds between 0 and 1, plot histogram of trials per subject with >= threshold proportion of valid data
 # plt.figure(1)
@@ -46,25 +54,36 @@ print np.mean(np.isnan([x for subject_data in data_child_super for trial_data in
 # TODO: WE CAN'T FLATTEN ACROSS TRIALS BEFORE COMPUTING CONFIDENCE INTERVALS, BECAUSE WE NEED INDEPENDENT SAMPLES!
 
 # Flatten data into trials (i.e., across subjects)
-flattened_data = [trial_data for subject_data in data_child_super for trial_data in zip(*subject_data)]
+flattened_child_data = [trial_data for subject_data in data_child_super for trial_data in zip(*subject_data)]
+flattened_adult_data = [trial_data for subject_data in data_adult_super for trial_data in zip(*subject_data)]
 
 # Flatten labels into frames (i.e., across subject and trials)
-flattened_labels = np.array([frame_data for subject_data in labels for trial_data in subject_data for frame_data in trial_data], dtype = int)
+flattened_child_labels = np.array([frame_data for subject_data in child_labels for trial_data in subject_data for frame_data in trial_data], dtype = int)
+flattened_adult_labels = np.array([frame_data for subject_data in adult_labels for trial_data in subject_data for frame_data in trial_data], dtype = int)
 
 # Range of variance values to try
 sigma2s = np.logspace(2, 8, num = 49)
 
-# Since fitting the HMM model takes a while, cache the results in a small CSV file outfile
-with open(outfile, 'wb') as csvfile:
-  writer = csv.writer(csvfile, delimiter = ',')
-  for sigma2 in sigma2s:
-    MLEs_child_super = [get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
-    MLEs_flattened = np.array([frame_data for trial_data in MLEs_child_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
-    err = (MLEs_flattened[MLEs_flattened != -1] != flattened_labels[MLEs_flattened != -1]).mean() # For now, ignore frames with missing data
-    std_err = np.sqrt(err*(1 - err)/len(MLEs_flattened[MLEs_flattened != -1]))
-    # print 'Couldn\'t classify ' + str((MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
-    print str(sigma2) + ', ' + str(err) + ', ' + str(std_err)
-    writer.writerow([sigma2, err, std_err])
+
+for sigma2 in sigma2s:
+  MLEs_adult_super = [get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_adult_data]
+  adult_MLEs_flattened = np.array([frame_data for trial_data in MLEs_adult_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
+  adult_err = (adult_MLEs_flattened[adult_MLEs_flattened != -1] != flattened_adult_labels[adult_MLEs_flattened != -1]).mean() # For now, ignore frames with missing data
+  adult_std_err = np.sqrt(adult_err*(1 - adult_err)/len(adult_MLEs_flattened[adult_MLEs_flattened != -1]))
+  # print 'Couldn\'t classify ' + str((adult_MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
+  print str(sigma2) + ', ' + str(adult_err) + ', ' + str(adult_std_err)
+
+# # Since fitting the HMM model takes a while, cache the results in a small CSV file outfile
+# with open(outfile, 'wb') as csvfile:
+#   writer = csv.writer(csvfile, delimiter = ',')
+#   for sigma2 in sigma2s:
+#     MLEs_child_super = [get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
+#     MLEs_flattened = np.array([frame_data for trial_data in MLEs_child_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
+#     err = (MLEs_flattened[MLEs_flattened != -1] != flattened_labels[MLEs_flattened != -1]).mean() # For now, ignore frames with missing data
+#     std_err = np.sqrt(err*(1 - err)/len(MLEs_flattened[MLEs_flattened != -1]))
+#     # print 'Couldn\'t classify ' + str((MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
+#     print str(sigma2) + ', ' + str(err) + ', ' + str(std_err)
+#     writer.writerow([sigma2, err, std_err])
 
 # Read results from outfile
 errors = np.zeros(sigma2s.shape)
