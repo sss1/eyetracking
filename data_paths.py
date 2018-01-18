@@ -133,11 +133,21 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
-eyetrack_fnames_adult_supervised = ["jaeah_supervised_blinky_1_16_2018_17_28.csv", \
-                                    "shashank_supervised_blinky_1_16_2018_17_41.csv"]
+eyetrack_fnames_adult_supervised = ["Alyssa_supervised_blinky_1_18_2018_17_12.csv", \
+                                    "jaeah_supervised_blinky_1_16_2018_17_28.csv", \
+                                    # TODO: remove from final analysis!
+                                    "shashank_supervised_blinky_1_16_2018_17_41.csv", \
+                                    # TODO: remove from final analysis!
+                                    "Melissa_supervised_blinky_1_18_2018_11_40.csv", \
+                                    "Nick_supervised_blinky_1_18_2018_16_59.csv"]
 
-trackit_fnames_adult_supervised = ["Jaeah_supervised_blinky.csv", \
-                                   "Shashank_supervised_blinky.csv"]
+trackit_fnames_adult_supervised = ["Alyssa_supervised_blinky.csv", \
+                                   "Jaeah_supervised_blinky.csv", \
+                                   # TODO: remove from final analysis!
+                                   "Shashank_supervised_blinky.csv", \
+                                   # TODO: remove from final analysis!
+                                   "Melissa_supervised_blinky.csv", \
+                                   "Nick_supervised_blinky.csv"]
 
 eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
                                     "A250switch_12_13_2017_9_16.csv", \
