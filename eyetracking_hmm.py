@@ -1,12 +1,10 @@
 import numpy as np
-from load_data import load_full_subject_data
-import util
 from scipy.stats import multivariate_normal
 from math import log
 
 # sigma2 - spherical emission variance (i.e., E[||X - E[X]||_2^2])
 def get_trackit_MLE(eye_track, target, distractors, sigma2 = 100 ** 2):
- 
+
   X = eye_track.swapaxes(0, 1)
   mu = np.concatenate((target[None, :, :], distractors)).swapaxes(1, 2)
   return get_MLE(X, mu, sigma2 = sigma2)
@@ -80,4 +78,4 @@ def __viterbi(X, mu, pi, Pi, sigma2 = 100 ** 2):
 def log_emission_prob(X, mu, sigma2 = 100 ** 2):
   # Add singleton dimension using None because log_multivariate_normal_density is written for
   # multiple samples, but we only need it for 1
-  return multivariate_normal.logpdf(X, mean = mu, cov = sigma2 * np.identity(2))
+  return multivariate_normal.logpdf(X, mean = mu, cov = sigma2)
