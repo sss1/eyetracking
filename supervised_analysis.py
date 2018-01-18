@@ -1,4 +1,5 @@
 import numpy as np
+np.set_printoptions(threshold = np.nan)
 import matplotlib.pyplot as plt
 import csv
 from scipy.stats import norm
@@ -6,7 +7,8 @@ import sys
 
 from load_data import load_full_subject_data
 import data_paths as dp
-from eyetracking_hmm import get_trackit_MLE
+import naive_eyetracking
+import eyetracking_hmm
 from util import preprocess_all
 
 outfile = dp.root + 'cache/' + 'supervised_analysis.csv'
@@ -32,6 +34,7 @@ data_adult_super = [subject_data[0:3] for subject_data in data_adult_super]
 print '\nMissing data after interpolation:'
 print np.mean(np.isnan([x for subject_data in data_child_super for trial_data in subject_data[0] for x in trial_data[0]]))
 print np.mean(np.isnan([x for subject_data in data_adult_super for trial_data in subject_data[0] for x in trial_data[0]]))
+sys.stdout.flush()
 
 # # For a range of thresholds between 0 and 1, plot histogram of trials per subject with >= threshold proportion of valid data
 # plt.figure(1)
@@ -65,13 +68,12 @@ flattened_adult_labels = np.array([frame_data for subject_data in adult_labels f
 # Range of variance values to try
 sigma2s = np.logspace(2, 8, num = 49)
 
-
 for sigma2 in sigma2s:
-  MLEs_adult_super = [get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_adult_data]
+  MLEs_adult_super = [naive_eyetracking.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_adult_data]
   adult_MLEs_flattened = np.array([frame_data for trial_data in MLEs_adult_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
-  adult_err = (adult_MLEs_flattened[adult_MLEs_flattened != -1] != flattened_adult_labels[adult_MLEs_flattened != -1]).mean() # For now, ignore frames with missing data
-  adult_std_err = np.sqrt(adult_err*(1 - adult_err)/len(adult_MLEs_flattened[adult_MLEs_flattened != -1]))
-  # print 'Couldn\'t classify ' + str((adult_MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
+  valid_pos = (adult_MLEs_flattened != 1) # exclude missing-data frames from accuracy calculation
+  adult_err = (adult_MLEs_flattened[valid_pos] != flattened_adult_labels[valid_pos]).mean() # For now, ignore frames with missing data
+  adult_std_err = np.sqrt(adult_err*(1 - adult_err)/len(adult_MLEs_flattened[valid_pos]))
   print str(sigma2) + ', ' + str(adult_err) + ', ' + str(adult_std_err)
   sys.stdout.flush()
 
