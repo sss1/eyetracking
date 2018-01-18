@@ -2,10 +2,6 @@ import math
 import numpy as np
 from itertools import chain, izip
 
-# Euclidean distance error
-def error_fcn(et_x, et_y, trackit_x, trackit_y):
-    return math.sqrt((et_x - trackit_x)**2 + (et_y - trackit_y)**2)
-
 # Construct numpy array from jagged data by filling ends of short rows with NaNs
 def jagged_to_numpy(jagged):
   aligned = np.ones((len(jagged), max([len(row) for row in jagged]))) * np.nan # allocate appropriately sized array of NaNs
@@ -35,6 +31,7 @@ def __interpolate_to_length_labels(X, N):
   change_points = np.where(X[:-1] != X[1:])[0]
   X_new = np.zeros(N, dtype = int)
   upsample_rate = float(N) / len(X)
+  new_segment_end = 0 # need this for the edge case where there are no change points
   for change_point_idx in range(len(change_points)):
     change_point = change_points[change_point_idx] + 1
     if change_point_idx == 0:
