@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 from scipy.stats import norm
+import sys
 
 from load_data import load_full_subject_data
 import data_paths as dp
@@ -72,6 +73,7 @@ for sigma2 in sigma2s:
   adult_std_err = np.sqrt(adult_err*(1 - adult_err)/len(adult_MLEs_flattened[adult_MLEs_flattened != -1]))
   # print 'Couldn\'t classify ' + str((adult_MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
   print str(sigma2) + ', ' + str(adult_err) + ', ' + str(adult_std_err)
+  sys.stdout.flush()
 
 # # Since fitting the HMM model takes a while, cache the results in a small CSV file outfile
 # with open(outfile, 'wb') as csvfile:
