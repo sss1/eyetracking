@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_trackit_MLE(eye_track, target, distractors, sigma2):
+def get_trackit_MLE(eye_track, target, distractors, sigma2 = None):
   N = eye_track.shape[1] # length of trial, in frames
   num_distractors = distractors.shape[0]
 
