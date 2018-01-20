@@ -24,7 +24,7 @@ print 'Adult: ' + str(np.mean(np.isnan([x for subject_data in data_adult_super f
 # We assume the number of distractors is the same in all trials and use this to calculate chance accuracy
 num_distractors = data_adult_super[0][2][0].shape[0]
 chance_accuracy = 1.0/(num_distractors + 1)
-print '\nSince there are ' + str(num_distractors) + ', chance accuracy is ' + str(chance_accuracy) + '.'
+print '\nSince there are ' + str(num_distractors) + ' distractors, chance accuracy is ' + str(chance_accuracy) + '.'
 
 # Preprocess data
 data_child_super = [preprocess_all(*subject_data) for subject_data in data_child_super]
