@@ -11,11 +11,14 @@ import naive_eyetracking
 import eyetracking_hmm
 from util import preprocess_all
 
-outfile = dp.root + 'cache/' + 'supervised_analysis.csv'
+adult_cachefile = dp.root + 'cache/' + 'adult_supervised_analysis.csv'
+child_cachefile = dp.root + 'cache/' + 'child_supervised_analysis.csv'
 
 # Load and preprocess data
 data_child_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_child_supervised, dp.eyetrack_fnames_child_supervised)]
 data_adult_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_adult_supervised, dp.eyetrack_fnames_adult_supervised)]
+
+data_adult_super = data_adult_super[0:1] # TODO: Remove this line! Debugging only!
 
 print '\nMissing data before interpolation:'
 print 'Child: ' + str(np.mean(np.isnan([x for subject_data in data_child_super for trial_data in subject_data[0] for x in trial_data[0]])))
@@ -70,46 +73,56 @@ flattened_adult_labels = [np.array(trial_data, dtype = int) for subject_data in 
 
 # Range of variance values to try
 sigma2s = np.logspace(2, 8, num = 49)
+# Apply HMM model to adult data at each sigma2 value
+with open(adult_cachefile, 'wb') as csvfile:
+  writer = csv.writer(csvfile, delimiter = ',')
+  for sigma2 in sigma2s:
+    MLEs_adult_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_adult_data]
+  
+    # Calculate accuracy for each trial
+    trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
+    adult_accuracy = np.mean(trial_accuracies)
+    adult_accuracy_std_err = np.sqrt(adult_accuracy*(1 - adult_accuracy)/len(trial_accuracies))
+    writer.writerow([sigma2, adult_accuracy, adult_accuracy_std_err])
+    print str(sigma2) + ', ' + str(adult_accuracy) + ', ' + str(adult_accuracy_std_err)
+    sys.stdout.flush()
 
-# for sigma2 in sigma2s:
-#   MLEs_adult_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_adult_data]
-# 
-#   # Calculate accuracy for each trial
-#   trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
-#   adult_accuracy = np.mean(trial_accuracies)
-#   adult_accuracy_std_err = np.sqrt(adult_accuracy*(1 - adult_accuracy)/len(trial_accuracies))
-# 
-#   # adult_MLEs_flattened = np.array([frame_data for trial_data in MLEs_adult_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
-#   # valid_pos = (adult_MLEs_flattened != 1) # exclude missing-data frames from accuracy calculation
-#   # adult_err = (adult_MLEs_flattened[valid_pos] != flattened_adult_labels[valid_pos]).mean() # For now, ignore frames with missing data
-#   # adult_std_err = np.sqrt(adult_err*(1 - adult_err)/len(adult_MLEs_flattened[valid_pos]))
-#   print str(sigma2) + ', ' + str(adult_accuracy) + ', ' + str(adult_accuracy_std_err)
-#   sys.stdout.flush()
+# Apply HMM model to child data at each sigma2 value
+with open(child_cachefile, 'wb') as csvfile:
+  writer = csv.writer(csvfile, delimiter = ',')
+  for sigma2 in sigma2s:
+    MLEs_child_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_child_data]
+  
+    # Calculate accuracy for each trial
+    trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_child_super, flattened_child_labels)]
+    child_accuracy = np.mean(trial_accuracies)
+    child_accuracy_std_err = np.sqrt(child_accuracy*(1 - child_accuracy)/len(trial_accuracies))
+    writer.writerow([sigma2, child_accuracy, child_accuracy_std_err])
+    print str(sigma2) + ', ' + str(child_accuracy) + ', ' + str(child_accuracy_std_err)
+    sys.stdout.flush()
 
+# Apply naive model to adults
 MLEs_adult_super = [naive_eyetracking.get_trackit_MLE(*trial_data) for trial_data in flattened_adult_data]
-naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
-naive_accuracy = np.mean(naive_accuracies)
-naive_accuracy_std_err = np.sqrt(naive_accuracy*(1 - naive_accuracy) / len(naive_accuracies))
-print '\nNaive model accuracy is ' + str(naive_accuracy) + \
-      ', with standard error ' + str(naive_accuracy_std_err) + \
-      ', based on ' + str(len(naive_accuracies)) + ' trials.'
+adult_naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
+adult_naive_accuracy = np.mean(adult_naive_accuracies)
+adult_naive_accuracy_std_err = np.sqrt(adult_naive_accuracy*(1 - adult_naive_accuracy) / len(adult_naive_accuracies))
+print '\nNaive model accuracy on adults is ' + str(adult_naive_accuracy) + \
+      ', with standard error ' + str(adult_naive_accuracy_std_err) + \
+      ', based on ' + str(len(adult_naive_accuracies)) + ' trials.'
 
-# # Since fitting the HMM model takes a while, cache the results in a small CSV file outfile
-# with open(outfile, 'wb') as csvfile:
-#   writer = csv.writer(csvfile, delimiter = ',')
-#   for sigma2 in sigma2s:
-#     MLEs_child_super = [get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
-#     MLEs_flattened = np.array([frame_data for trial_data in MLEs_child_super for frame_data in trial_data], dtype = int) # flatten MLEs across trials
-#     err = (MLEs_flattened[MLEs_flattened != -1] != flattened_labels[MLEs_flattened != -1]).mean() # For now, ignore frames with missing data
-#     std_err = np.sqrt(err*(1 - err)/len(MLEs_flattened[MLEs_flattened != -1]))
-#     # print 'Couldn\'t classify ' + str((MLEs_flattened == -1).mean()) + ' fraction of frames due to missing data.'
-#     print str(sigma2) + ', ' + str(err) + ', ' + str(std_err)
-#     writer.writerow([sigma2, err, std_err])
+# Apply naive model to children
+MLEs_child_super = [naive_eyetracking.get_trackit_MLE(*trial_data) for trial_data in flattened_child_data]
+child_naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_child_super, flattened_child_labels)]
+child_naive_accuracy = np.mean(child_naive_accuracies)
+child_naive_accuracy_std_err = np.sqrt(child_naive_accuracy*(1 - child_naive_accuracy) / len(child_naive_accuracies))
+print '\nNaive model accuracy on children is ' + str(child_naive_accuracy) + \
+      ', with standard error ' + str(child_naive_accuracy_std_err) + \
+      ', based on ' + str(len(child_naive_accuracies)) + ' trials.'
 
-# Read results from outfile
+# Read results from adult_cachefile
 accuracies = np.zeros(sigma2s.shape)
 std_errs = np.zeros(sigma2s.shape)
-with open(outfile, 'rb') as csvfile:
+with open(adult_cachefile, 'rb') as csvfile:
   reader = csv.reader(csvfile, delimiter = ',')
   row_idx = 0
   for row in reader:
@@ -127,11 +140,11 @@ upper_band, = plt.plot(np.sqrt(sigma2s), accuracies + yerr, c = 'b', ls = '--', 
 
 min_max_x = np.sqrt([sigma2s[0], sigma2s[-1]])
 # Plot accuracy for guessing the closest object
-naive_val = np.array([naive_accuracy, naive_accuracy])
-naive_yerr = norm.ppf(1 - type1_error/2) * naive_accuracy_std_err
-naive_line, = plt.plot(min_max_x, naive_val, c = 'g', label = 'Naive (Adult)')
-naive_lower_band, = plt.plot(min_max_x, naive_val - naive_yerr, c = 'g', ls = '--', zorder = 2) # upper confidence band
-naive_upper_band, = plt.plot(min_max_x, naive_val + naive_yerr, c = 'g', ls = '--', zorder = 2) # lower confidence band
+adult_naive_val = np.array([adult_naive_accuracy, adult_naive_accuracy])
+adult_naive_yerr = norm.ppf(1 - type1_error/2) * adult_naive_accuracy_std_err
+adult_naive_line, = plt.plot(min_max_x, adult_naive_val, c = 'g', label = 'Naive (Adult)')
+adult_naive_lower_band, = plt.plot(min_max_x, adult_naive_val - adult_naive_yerr, c = 'g', ls = '--', zorder = 2) # upper confidence band
+adult_naive_upper_band, = plt.plot(min_max_x, adult_naive_val + adult_naive_yerr, c = 'g', ls = '--', zorder = 2) # lower confidence band
 # Plot accuracy for random guessing
 chance_line, = plt.plot(min_max_x, [chance_accuracy, chance_accuracy], c = 'r', label = 'Chance')
 
@@ -142,5 +155,5 @@ plt.xlim(min_max_x)
 plt.ylim((0, 1))
 min_idx = np.argmax(accuracies)
 opt_point = plt.scatter(np.sqrt(sigma2s[min_idx]), accuracies[min_idx], c = 'r', marker = '^', s = 100, zorder = 3, label = 'Optimum')
-plt.legend(handles = [acc_line, naive_line, chance_line, opt_point], numpoints = 3, scatterpoints = 1, loc = 'lower left')
+plt.legend(handles = [acc_line, adult_naive_line, chance_line, opt_point], numpoints = 3, scatterpoints = 1, loc = 'lower left')
 plt.show()
