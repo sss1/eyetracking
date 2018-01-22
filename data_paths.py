@@ -149,21 +149,31 @@ trackit_fnames_adult_supervised = ["Alyssa_supervised_blinky.csv", \
                                    "Melissa_supervised_blinky.csv", \
                                    "Nick_supervised_blinky.csv"]
 
-eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
-                                    "A250switch_12_13_2017_9_16.csv", \
-                                    "A252switch_12_13_2017_10_40.csv", \
-                                    # "A269switch_12_14_2017_13_43.csv", \ # difficulty calibrating
-                                    "a306SWITCH_12_13_2017_10_27.csv", \
-                                    "A309switch_12_13_2017_10_53.csv", \
-                                    "A310switch_12_14_2017_14_5.csv"]
 
-trackit_fnames_child_supervised = ["A225blink.csv", \
-                                   "a250switch.csv", \
-                                   "A252switch.csv", \
-                                   # "a269switch.csv", \ # difficulty calibrating
-                                   "A306switch.csv", \
-                                   "A309switch.csv", \
-                                   "a310switch.csv"]
+eyetrack_fnames_child_supervised = ["A257_1_22_2018_9_5.csv", \
+                                    "A268_1_22_2018_9_29.csv", \
+                                    "A269_1_22_2018_9_18.csv"]
+
+trackit_fnames_child_supervised = ["A257blinky.csv", \
+                                   "A268blinky.csv", \
+                                   "A269blinky.csv"]
+
+# Old buggy data
+# eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
+#                                     "A250switch_12_13_2017_9_16.csv", \
+#                                     "A252switch_12_13_2017_10_40.csv", \
+#                                     # "A269switch_12_14_2017_13_43.csv", \ # difficulty calibrating
+#                                     "a306SWITCH_12_13_2017_10_27.csv", \
+#                                     "A309switch_12_13_2017_10_53.csv", \
+#                                     "A310switch_12_14_2017_14_5.csv"]
+# 
+# trackit_fnames_child_supervised = ["A225blink.csv", \
+#                                    "a250switch.csv", \
+#                                    "A252switch.csv", \
+#                                    # "a269switch.csv", \ # difficulty calibrating
+#                                    "A306switch.csv", \
+#                                    "A309switch.csv", \
+#                                    "a310switch.csv"]
 
 trackit_fnames_adult_0dis  = [root + "adult_pilot/TrackItOutput/0Distractors/" + fname for fname in trackit_fnames_adult_0dis]
 eyetrack_fnames_adult_0dis = [root + "adult_pilot/EyeTracker/0Distractors/" + fname for fname in eyetrack_fnames_adult_0dis]
@@ -179,5 +189,5 @@ trackit_fnames_child_diff = [root + "3yo/TrackItOutput/AllDiff/" + fname for fna
 eyetrack_fnames_child_diff = [root + "3yo/EyeTracker/AllDiff/" + fname for fname in eyetrack_fnames_child_diff]
 trackit_fnames_adult_supervised = [root + "switch_calibration/adult/TrackItOutput/" + fname for fname in trackit_fnames_adult_supervised]
 eyetrack_fnames_adult_supervised = [root + "switch_calibration/adult/EyeTracker/" + fname for fname in eyetrack_fnames_adult_supervised]
-trackit_fnames_child_supervised = [root + "switch_calibration/child_old_buggy/TrackItOutput/" + fname for fname in trackit_fnames_child_supervised]
-eyetrack_fnames_child_supervised = [root + "switch_calibration/child_old_buggy/EyeTracker/" + fname for fname in eyetrack_fnames_child_supervised]
+trackit_fnames_child_supervised = [root + "switch_calibration/child/TrackItOutput/" + fname for fname in trackit_fnames_child_supervised]
+eyetrack_fnames_child_supervised = [root + "switch_calibration/child/EyeTracker/" + fname for fname in eyetrack_fnames_child_supervised]
