@@ -18,8 +18,6 @@ child_cachefile = dp.root + 'cache/' + 'child_supervised_analysis.csv'
 data_child_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_child_supervised, dp.eyetrack_fnames_child_supervised)]
 data_adult_super = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in zip(dp.trackit_fnames_adult_supervised, dp.eyetrack_fnames_adult_supervised)]
 
-data_adult_super = data_adult_super[0:1] # TODO: Remove this line! Debugging only!
-
 print '\nMissing data before interpolation:'
 print 'Child: ' + str(np.mean(np.isnan([x for subject_data in data_child_super for trial_data in subject_data[0] for x in trial_data[0]])))
 print 'Adult: ' + str(np.mean(np.isnan([x for subject_data in data_adult_super for trial_data in subject_data[0] for x in trial_data[0]])))
