@@ -78,9 +78,10 @@ with open(adult_cachefile, 'wb') as csvfile:
     MLEs_adult_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_adult_data]
   
     # Calculate accuracy for each trial
-    trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
-    adult_accuracy = np.mean(trial_accuracies)
-    adult_accuracy_std_err = np.sqrt(adult_accuracy*(1 - adult_accuracy)/len(trial_accuracies))
+    adult_trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
+    # Calculate mean and standard error across trials
+    adult_accuracy = np.mean(adult_trial_accuracies)
+    adult_accuracy_std_err = np.std(adult_trial_accuracies) / np.sqrt(len(adult_trial_accuracies))
     writer.writerow([sigma2, adult_accuracy, adult_accuracy_std_err])
     print str(sigma2) + ', ' + str(adult_accuracy) + ', ' + str(adult_accuracy_std_err)
     sys.stdout.flush()
@@ -92,9 +93,10 @@ with open(child_cachefile, 'wb') as csvfile:
     MLEs_child_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_child_data]
   
     # Calculate accuracy for each trial
-    trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_child_super, flattened_child_labels)]
-    child_accuracy = np.mean(trial_accuracies)
-    child_accuracy_std_err = np.sqrt(child_accuracy*(1 - child_accuracy)/len(trial_accuracies))
+    child_trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_child_super, flattened_child_labels)]
+    # Calculate mean and standard error across trials
+    child_accuracy = np.mean(child_trial_accuracies)
+    child_accuracy_std_err = np.std(child_trial_accuracies) / np.sqrt(len(child_trial_accuracies))
     writer.writerow([sigma2, child_accuracy, child_accuracy_std_err])
     print str(sigma2) + ', ' + str(child_accuracy) + ', ' + str(child_accuracy_std_err)
     sys.stdout.flush()
@@ -103,7 +105,7 @@ with open(child_cachefile, 'wb') as csvfile:
 MLEs_adult_super = [naive_eyetracking.get_trackit_MLE(*trial_data) for trial_data in flattened_adult_data]
 adult_naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_adult_super, flattened_adult_labels)]
 adult_naive_accuracy = np.mean(adult_naive_accuracies)
-adult_naive_accuracy_std_err = np.sqrt(adult_naive_accuracy*(1 - adult_naive_accuracy) / len(adult_naive_accuracies))
+adult_naive_accuracy_std_err = np.std(adult_naive_accuracies) / np.sqrt(len(adult_naive_accuracies))
 print '\nNaive model accuracy on adults is ' + str(adult_naive_accuracy) + \
       ', with standard error ' + str(adult_naive_accuracy_std_err) + \
       ', based on ' + str(len(adult_naive_accuracies)) + ' trials.'
@@ -112,7 +114,7 @@ print '\nNaive model accuracy on adults is ' + str(adult_naive_accuracy) + \
 MLEs_child_super = [naive_eyetracking.get_trackit_MLE(*trial_data) for trial_data in flattened_child_data]
 child_naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_child_super, flattened_child_labels)]
 child_naive_accuracy = np.mean(child_naive_accuracies)
-child_naive_accuracy_std_err = np.sqrt(child_naive_accuracy*(1 - child_naive_accuracy) / len(child_naive_accuracies))
+child_naive_accuracy_std_err = np.std(child_naive_accuracies) / np.sqrt(len(child_naive_accuracies))
 print '\nNaive model accuracy on children is ' + str(child_naive_accuracy) + \
       ', with standard error ' + str(child_naive_accuracy_std_err) + \
       ', based on ' + str(len(child_naive_accuracies)) + ' trials.'
