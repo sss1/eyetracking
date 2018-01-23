@@ -12,9 +12,9 @@ def get_trackit_MLE(eye_track, target, distractors, sigma2 = 100 ** 2):
 def get_MLE(X, mu, sigma2 = 100 ** 2): 
 
   # For now, just hardcode reasonable guesses of model parameters
-  trans_prob = 0.003 # Probability of transitioning between any pair of states # was originally 0.0001
-  # The guess of 0.003 corresponds to an average of 3 switches per 1000 frames, or roughly once every 5.55 seconds
   n_states = mu.shape[0]
+  trans_prob = (1.0/600.0)/(n_states - 1.0) # Probability of transitioning between any pair of states # was originally 0.0001
+  # This guess corresponds to an average of 1 switches per 600 frames, or roughly once every 10 seconds
   pi = np.ones(n_states) / n_states # Uniform starting probabilities
   Pi = (1 - n_states*trans_prob) * np.identity(n_states) + trans_prob * np.ones((n_states,n_states))
   return __viterbi(X, mu, pi, Pi, sigma2 = sigma2)
