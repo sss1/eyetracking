@@ -1,6 +1,6 @@
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
-# root = "/home/sss1/Desktop/academic/projects/eyetracking/" # Home desktop
+# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
+root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
 
 trackit_fnames_adult_0dis = ["Anna0dis.csv", \
                              "Cheul0dis.csv", \
@@ -138,7 +138,7 @@ eyetrack_fnames_adult_supervised = ["AC_1_23_2018_15_45.csv", \
                                     "CM_1_23_2018_16_5.csv", \
                                     "EX_1_23_2018_16_54.csv", \
                                     "HD_1_23_2018_16_39.csv", \
-                                    "JA_1_23_2018_16_23.csv", \
+                                    # "JA_1_23_2018_16_23.csv", \ # Eye-tracker couldn't calibrate
                                     "JK_supervised_blinky_1_16_2018_17_28.csv", \
                                     # TODO: remove from final analysis!
                                     "LR_1_23_2018_17_11.csv", \
@@ -152,7 +152,7 @@ trackit_fnames_adult_supervised = ["AC_super_blinky.csv", \
                                    "CM_super_blinky.csv", \
                                    "EX_super_blinky.csv", \
                                    "HD_super_blinky.csv", \
-                                   "JA_super_blinky.csv", \
+                                   # "JA_super_blinky.csv", \ # Eye-tracker couldn't calibrate
                                    "JK_supervised_blinky.csv", \
                                    # TODO: remove from final analysis!
                                    "LR_super_blinky.csv", \
