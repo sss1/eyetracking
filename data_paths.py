@@ -133,30 +133,41 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
-eyetrack_fnames_adult_supervised = ["Alyssa_supervised_blinky_1_18_2018_17_12.csv", \
-                                    "jaeah_supervised_blinky_1_16_2018_17_28.csv", \
+eyetrack_fnames_adult_supervised = ["AC_1_23_2018_15_45.csv", \
+                                    "Alyssa_supervised_blinky_1_18_2018_17_12.csv", \
+                                    "CM_1_23_2018_16_5.csv", \
+                                    "EX_1_23_2018_16_54.csv", \
+                                    "HD_1_23_2018_16_39.csv", \
+                                    "JA_1_23_2018_16_23.csv", \
+                                    "JK_supervised_blinky_1_16_2018_17_28.csv", \
                                     # TODO: remove from final analysis!
-                                    "shashank_supervised_blinky_1_16_2018_17_41.csv", \
-                                    # TODO: remove from final analysis!
-                                    "Melissa_supervised_blinky_1_18_2018_11_40.csv", \
-                                    "Nick_supervised_blinky_1_18_2018_16_59.csv"]
+                                    "LR_1_23_2018_17_11.csv", \
+                                    "MP_supervised_blinky_1_18_2018_11_40.csv", \
+                                    "Nick_supervised_blinky_1_18_2018_16_59.csv", \
+                                    "PS_1_22_2018_15_49.csv", \
+                                    "SS_supervised_blinky_1_16_2018_17_41.csv"] # TODO: remove from final analysis!
 
-trackit_fnames_adult_supervised = ["Alyssa_supervised_blinky.csv", \
-                                   "Jaeah_supervised_blinky.csv", \
+trackit_fnames_adult_supervised = ["AC_super_blinky.csv", \
+                                   "Alyssa_supervised_blinky.csv", \
+                                   "CM_super_blinky.csv", \
+                                   "EX_super_blinky.csv", \
+                                   "HD_super_blinky.csv", \
+                                   "JA_super_blinky.csv", \
+                                   "JK_supervised_blinky.csv", \
                                    # TODO: remove from final analysis!
-                                   "Shashank_supervised_blinky.csv", \
-                                   # TODO: remove from final analysis!
-                                   "Melissa_supervised_blinky.csv", \
-                                   "Nick_supervised_blinky.csv"]
+                                   "LR_super_blinky.csv", \
+                                   "MP_supervised_blinky.csv", \
+                                   "Nick_supervised_blinky.csv", \
+                                   "PS_super_blinky.csv", \
+                                   "SS_supervised_blinky.csv"] # TODO: remove from final analysis!
 
+eyetrack_fnames_child_supervised = ["A268_1_22_2018_9_29.csv", \
+                                    "A270_1_24_2018_8_57.csv", \
+                                    "A308_1_24_2018_9_24.csv"]
 
-eyetrack_fnames_child_supervised = ["A257_1_22_2018_9_5.csv", \
-                                    "A268_1_22_2018_9_29.csv", \
-                                    "A269_1_22_2018_9_18.csv"]
-
-trackit_fnames_child_supervised = ["A257blinky.csv", \
-                                   "A268blinky.csv", \
-                                   "A269blinky.csv"]
+trackit_fnames_child_supervised = ["A268_super_blinky.csv", \
+                                   "A270_super_blinky.csv", \
+                                   "A308_super_blinky.csv"]
 
 # Old buggy data
 # eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
