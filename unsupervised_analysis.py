@@ -10,10 +10,10 @@ import numpy as np
 
 # load datasets
 # data is (subject X (eyetrack/target/distractors) X trial)
-data_adult_0dis = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_adult_0dis, dp.eyetrack_fnames_adult_0dis)]
+# data_adult_0dis = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_adult_0dis, dp.eyetrack_fnames_adult_0dis)]
 data_adult_same = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_adult_same, dp.eyetrack_fnames_adult_same)]
 data_adult_diff = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_adult_diff, dp.eyetrack_fnames_adult_diff)]
-data_child_0dis = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_child_0dis, dp.eyetrack_fnames_child_0dis)]
+# data_child_0dis = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_child_0dis, dp.eyetrack_fnames_child_0dis)]
 data_child_same = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_child_same, dp.eyetrack_fnames_child_same)]
 data_child_diff = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_child_diff, dp.eyetrack_fnames_child_diff)]
 
@@ -95,8 +95,8 @@ data_child_diff = [preprocess_all(*subject_data) for subject_data in data_child_
 # plt.show()
 
 # Values taken from supervised analysis; TODO: Update these once we've collected more supervised data
-sigma2_adult = 562.34132519 ** 2
-sigma2_child = 562.34132519 ** 2
+sigma2_adult = 490 ** 2
+sigma2_child = 650 ** 2
 
 print '\nMissing data after interpolation:'
 print 'Adult Same: ' + str(np.mean(np.isnan([x for subject_data in data_adult_same for trial_data in subject_data[0] for x in trial_data[0]])))
