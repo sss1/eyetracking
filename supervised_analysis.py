@@ -11,7 +11,7 @@ import naive_eyetracking
 import eyetracking_hmm
 from util import preprocess_all
 
-def run_analysis(dataset_name):
+def run_analysis(dataset_name, show_meta, use_all_frames):
 
   # Load appropriate dataset
   if dataset_name == 'Adult':
@@ -71,28 +71,31 @@ def run_analysis(dataset_name):
   # Range of variance values to try
   sigma2s = np.logspace(2, 8, num = 49)
   # Apply HMM model at each sigma2 value
-  print 'Caching results in ' + cachefile
-  with open(cachefile, 'wb') as csvfile:
-    writer = csv.writer(csvfile, delimiter = ',')
-    for sigma2 in sigma2s:
-      MLEs_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
-    
-      # Calculate accuracy for each trial
-      trial_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
-      # Calculate mean and standard error across trials
-      accuracy = np.nanmean(trial_accuracies)
-      accuracy_std_err = np.nanstd(trial_accuracies) / np.sqrt(len(trial_accuracies))
-      writer.writerow([sigma2, accuracy, accuracy_std_err])
-      print str(sigma2) + ', ' + str(accuracy) + ', ' + str(accuracy_std_err)
-      sys.stdout.flush()
+  # print 'Caching results in ' + cachefile
+  # with open(cachefile, 'wb') as csvfile:
+  #   writer = csv.writer(csvfile, delimiter = ',')
+  #   for sigma2 in sigma2s:
+  #     MLEs_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
+  #   
+  #     # Calculate accuracy for each trial
+  #     trial_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
+  #     # Calculate mean and standard error across trials
+  #     accuracy = np.nanmean(trial_accuracies)
+  #     accuracy_std_err = np.nanstd(trial_accuracies) / np.sqrt(len(trial_accuracies))
+  #     writer.writerow([sigma2, accuracy, accuracy_std_err])
+  #     print str(sigma2) + ', ' + str(accuracy) + ', ' + str(accuracy_std_err)
+  #     sys.stdout.flush()
   
   # Run naive model for comparison
   MLEs_super = [naive_eyetracking.get_trackit_MLE(*trial_data) for trial_data in flattened_data]
-  naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
-  naive_accuracy = np.mean(naive_accuracies)
-  naive_accuracy_std_err = np.std(naive_accuracies) / np.sqrt(len(naive_accuracies))
+  if use_all_frames:
+    naive_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
+  else:
+    naive_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
+  naive_accuracy = np.nanmean(naive_accuracies)
+  naive_accuracy_std_err = np.nanstd(naive_accuracies) / np.sqrt(len(naive_accuracies))
   print 'Naive model accuracy on is ' + str(naive_accuracy) + \
-        ', with standard error ' + str(naive_accuracy_std_err) + \
+        ', with CI ' + str(1.96 * naive_accuracy_std_err) + \
         ', based on ' + str(len(naive_accuracies)) + ' trials.'
   
   # Read results from cachefile
@@ -110,7 +113,7 @@ def run_analysis(dataset_name):
   type1_error = 0.05
   bonferroni_type1_error = type1_error/len(std_errs) # Convert error bars to uniform error bands via Bonferroni
   yerr = norm.ppf(1 - bonferroni_type1_error/2) * std_errs # Radius of confidence band
-  acc_line, = plt.plot(np.sqrt(sigma2s), accuracies, c = 'b', marker = 'o', zorder = 2, label = 'HMM') # point estimates
+  acc_line, = plt.plot(np.sqrt(sigma2s), accuracies, c = 'b', marker = 'o', markersize = 4, zorder = 2, label = 'HMM') # point estimates
   lower_band, = plt.plot(np.sqrt(sigma2s), accuracies - yerr, c = 'b', ls = '--', zorder = 2) # upper confidence band
   upper_band, = plt.plot(np.sqrt(sigma2s), accuracies + yerr, c = 'b', ls = '--', zorder = 2) # lower confidence band
   
@@ -130,9 +133,21 @@ def run_analysis(dataset_name):
   plt.xlim(min_max_x)
   plt.ylim((0, 1))
   min_idx = np.argmax(accuracies)
-  opt_point = plt.scatter(np.sqrt(sigma2s[min_idx]), accuracies[min_idx], c = 'r', marker = '^', s = 100, zorder = 3, label = 'Optimum')
-  plt.legend(handles = [acc_line, naive_line, chance_line, opt_point], numpoints = 3, scatterpoints = 1, loc = 'lower center')
-  plt.show()
+  opt_x = np.sqrt(sigma2s[min_idx])
+  opt_y = accuracies[min_idx]
+  opt_point = plt.scatter(opt_x, opt_y, c = 'r', marker = '^', s = 100, zorder = 3, label = 'Optimum')
+  vdiff = 0.3
+  if not show_meta:
+    vdiff = 0.5
+  plt.annotate(str((round(opt_x, -1), round(opt_y, 2))), xy = (opt_x, opt_y), xytext = (opt_x, opt_y - vdiff), \
+               arrowprops = dict(facecolor = (0, 0, 0, 0.5), edgecolor = (0, 0, 0, 0), width = 2), \
+               horizontalalignment = 'center', verticalalignment = 'bottom', fontsize = 16)
+  if show_meta:
+    plt.legend(handles = [acc_line, naive_line, chance_line, opt_point], numpoints = 3, scatterpoints = 1, fontsize = 16)
+    plt.gcf().tight_layout()
+  # plt.show()
+  plt.gcf().savefig('/home/sss1/Desktop/academic/projects/eyetracking/figs/' + dataset_name.lower() + '_supervised_performance_over_sigma.pdf')
+  plt.clf()
 
-run_analysis('Adult')
-run_analysis('Child')
+run_analysis('Adult', show_meta = True, use_all_frames = False)
+run_analysis('Child', show_meta = False, use_all_frames = False)
