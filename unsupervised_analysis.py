@@ -111,7 +111,7 @@ print 'Child Diff: ' + str(np.mean(np.isnan([x for subject_data in data_child_di
 # MLEs_child_same = [[eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2_child) for trial_data in zip(*subject_data)] for subject_data in data_child_same]
 # MLEs_child_diff = [[eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2_child) for trial_data in zip(*subject_data)] for subject_data in data_child_diff]
 # # Since HMM analysis is slow, cache the results
-# np.savez(dp.root + 'tmp/' + 'MLEs_all.npz', \
+# np.savez(dp.root + 'cache/' + 'MLEs_all.npz', \
 #          MLEs_adult_same = MLEs_adult_same, \
 #          MLEs_adult_diff = MLEs_adult_diff, \
 #          MLEs_child_same = MLEs_child_same, \
