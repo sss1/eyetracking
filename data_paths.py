@@ -1,6 +1,6 @@
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
-root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
+# root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
 
 trackit_fnames_adult_0dis = ["Anna0dis.csv", \
                              "Cheul0dis.csv", \
@@ -133,41 +133,77 @@ eyetrack_fnames_child_diff = ["A232Diff_3_29_2016_10_23.csv", \
                               "A245Diff_3_29_2016_9_0.csv", \
                               "A247Diff_3_22_2016_10_27.csv"]
 
-eyetrack_fnames_adult_supervised = ["AC_1_23_2018_15_45.csv", \
-                                    "Alyssa_supervised_blinky_1_18_2018_17_12.csv", \
+eyetrack_fnames_adult_supervised = ["A__1_18_2018_17_12.csv", \
+                                    "AC_1_23_2018_15_45.csv", \
+                                    "AF_1_24_2018_16_4.csv", \
                                     "CM_1_23_2018_16_5.csv", \
                                     "EX_1_23_2018_16_54.csv", \
                                     "HD_1_23_2018_16_39.csv", \
+                                    "HF_1_25_2018_12_46.csv", \
+                                    "IR_1_26_2018_13_34.csv", \
                                     # "JA_1_23_2018_16_23.csv", \ # Eye-tracker couldn't calibrate
-                                    "JK_supervised_blinky_1_16_2018_17_28.csv", \
-                                    # TODO: remove from final analysis!
+                                    # "JK_1_16_2018_17_28.csv", \ # Pilot data
+                                    "KC_1_24_2018_16_25.csv", \
                                     "LR_1_23_2018_17_11.csv", \
-                                    "MP_supervised_blinky_1_18_2018_11_40.csv", \
-                                    "Nick_supervised_blinky_1_18_2018_16_59.csv", \
+                                    "MP_1_18_2018_11_40.csv", \
+                                    "N__1_18_2018_16_59.csv", \
                                     "PS_1_22_2018_15_49.csv", \
-                                    "SS_supervised_blinky_1_16_2018_17_41.csv"] # TODO: remove from final analysis!
+                                    "RI_1_25_2018_12_31.csv", \
+                                    "RR_1_25_2018_14_20.csv", \
+                                    # "SS_1_16_2018_17_41.csv" # Pilot data
+                                    ]
 
-trackit_fnames_adult_supervised = ["AC_super_blinky.csv", \
-                                   "Alyssa_supervised_blinky.csv", \
+trackit_fnames_adult_supervised = ["A__super_blinky.csv", \
+                                   "AC_super_blinky.csv", \
+                                   "AF_super_blinky.csv", \
                                    "CM_super_blinky.csv", \
                                    "EX_super_blinky.csv", \
                                    "HD_super_blinky.csv", \
+                                   "HF_super_blinky.csv", \
+                                   "IR_super_blinky.csv", \
                                    # "JA_super_blinky.csv", \ # Eye-tracker couldn't calibrate
-                                   "JK_supervised_blinky.csv", \
-                                   # TODO: remove from final analysis!
+                                   # "JK_super_blinky.csv", \ # Pilot data
+                                   "KC_super_blinky.csv", \
                                    "LR_super_blinky.csv", \
-                                   "MP_supervised_blinky.csv", \
-                                   "Nick_supervised_blinky.csv", \
+                                   "MP_super_blinky.csv", \
+                                   "N__super_blinky.csv", \
                                    "PS_super_blinky.csv", \
-                                   "SS_supervised_blinky.csv"] # TODO: remove from final analysis!
+                                   "RI_super_blinky.csv", \
+                                   "RR_super_blinky.csv", \
+                                   # "SS_super_blinky.csv" # Pilot data
+                                   ]
 
-eyetrack_fnames_child_supervised = ["A268_1_22_2018_9_29.csv", \
+eyetrack_fnames_child_supervised = ["A228_1_25_2018_9_16.csv", \
+                                    "A234_1_25_2018_10_33.csv", \
+                                    "A242_1_25_2018_10_15.csv", \
+                                    "A243_1_29_2018_10_18.csv", \
+                                    "A247_1_29_2018_10_35.csv", \
+                                    "A256_1_29_2018_8_59.csv", \
+                                    "A257_1_29_2018_14_7.csv", \
+                                    "A259_1_25_2018_9_1.csv", \
+                                    "A268_1_22_2018_9_29.csv", \
                                     "A270_1_24_2018_8_57.csv", \
-                                    "A308_1_24_2018_9_24.csv"]
+                                    "A271_1_29_2018_13_52.csv", \
+                                    "A296_1_29_2018_9_15.csv", \
+                                    "A307_1_29_2018_13_34.csv", \
+                                    "A308_1_24_2018_9_24.csv", \
+                                    "A311_1_25_2018_10_47.csv"]
 
-trackit_fnames_child_supervised = ["A268_super_blinky.csv", \
+trackit_fnames_child_supervised = ["A228_super_blinky.csv", \
+                                   "A234_super_blinky.csv", \
+                                   "A242_super_blinky.csv", \
+                                   "A243_super_blinky.csv", \
+                                   "A247_super_blinky.csv", \
+                                   "A256_super_blinky.csv", \
+                                   "A257_super_blinky.csv", \
+                                   "A259_super_blinky.csv", \
+                                   "A268_super_blinky.csv", \
                                    "A270_super_blinky.csv", \
-                                   "A308_super_blinky.csv"]
+                                   "A271_super_blinky.csv", \
+                                   "A296_super_blinky.csv", \
+                                   "A307_super_blinky.csv", \
+                                   "A308_super_blinky.csv", \
+                                   "A311_super_blinky.csv"]
 
 # Old buggy data
 # eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
