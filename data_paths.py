@@ -1,6 +1,6 @@
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
-# root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
+# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
+root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
 
 trackit_fnames_adult_0dis = ["Anna0dis.csv", \
                              "Cheul0dis.csv", \
@@ -177,15 +177,15 @@ eyetrack_fnames_child_supervised = ["A228_1_25_2018_9_16.csv", \
                                     "A234_1_25_2018_10_33.csv", \
                                     "A242_1_25_2018_10_15.csv", \
                                     "A243_1_29_2018_10_18.csv", \
-                                    "A247_1_29_2018_10_35.csv", \
+                                    # "A247_1_29_2018_10_35.csv", \ # Eye-tracker couldn't calibrate
                                     "A256_1_29_2018_8_59.csv", \
                                     "A257_1_29_2018_14_7.csv", \
                                     "A259_1_25_2018_9_1.csv", \
                                     "A268_1_22_2018_9_29.csv", \
                                     "A270_1_24_2018_8_57.csv", \
-                                    "A271_1_29_2018_13_52.csv", \
+                                    # "A271_1_29_2018_13_52.csv", \ # Eye-tracker couldn't calibrate
                                     "A296_1_29_2018_9_15.csv", \
-                                    "A307_1_29_2018_13_34.csv", \
+                                    # "A307_1_29_2018_13_34.csv", \ # Eye-tracker couldn't calibrate
                                     "A308_1_24_2018_9_24.csv", \
                                     "A311_1_25_2018_10_47.csv"]
 
@@ -193,15 +193,15 @@ trackit_fnames_child_supervised = ["A228_super_blinky.csv", \
                                    "A234_super_blinky.csv", \
                                    "A242_super_blinky.csv", \
                                    "A243_super_blinky.csv", \
-                                   "A247_super_blinky.csv", \
+                                   # "A247_super_blinky.csv", \ # Eye-tracker couldn't calibrate
                                    "A256_super_blinky.csv", \
                                    "A257_super_blinky.csv", \
                                    "A259_super_blinky.csv", \
                                    "A268_super_blinky.csv", \
                                    "A270_super_blinky.csv", \
-                                   "A271_super_blinky.csv", \
+                                   # "A271_super_blinky.csv", \ # Eye-tracker couldn't calibrate
                                    "A296_super_blinky.csv", \
-                                   "A307_super_blinky.csv", \
+                                   # "A307_super_blinky.csv", \ # Eye-tracker couldn't calibrate
                                    "A308_super_blinky.csv", \
                                    "A311_super_blinky.csv"]
 
