@@ -41,26 +41,8 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
   
   print 'Missing data after interpolation: ' + \
     str(np.mean(np.isnan([x for subject_data in data for trial_data in subject_data[0] for x in trial_data[0]])))
-  sys.stdout.flush()
 
-  # # For a range of thresholds between 0 and 1, plot histogram of trials per subject with >= threshold proportion of valid data
-  # plt.figure(1)
-  # data = data
-  # condition_name = 'Supervised'
-  # num_plots = 10
-  # x_max = max([len(subject_data[0]) for subject_data in data]) + 1
-  # for threshold_idx in range(num_plots):
-  #   threshold = threshold_idx / float(num_plots)
-  #   plt.subplot(num_plots, 1, threshold_idx + 1)
-  #   plt.hist([sum([np.mean(np.isnan(trial_data[0,:])) > threshold for trial_data in subject_data[0]]) for subject_data in data], bins = [x/2.0 for x in range(2*x_max)])
-  #   plt.xlim(0, x_max)
-  #   plt.ylim(0, len(data))
-  #   plt.ylabel(str(threshold))
-  # plt.gcf().text(0.04, 0.5, 'Threshold', va = 'center', rotation = 'vertical')
-  # plt.gcf().suptitle('Distribution of Trials per Subject\nwith Missing Data Proportion at most \"Thresholding\"\n(' + condition_name + ' Condition)', fontsize = "x-large")
-  # mng = plt.get_current_fig_manager()
-  # # mng.resize(*mng.window.maxsize())
-  # plt.show()
+  sys.stdout.flush()
 
   # Flatten data into trials (i.e., across subjects)
   flattened_data = [trial_data for subject_data in data for trial_data in zip(*subject_data)]
@@ -71,20 +53,23 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
   # Range of variance values to try
   sigma2s = np.logspace(2, 8, num = 49)
   # Apply HMM model at each sigma2 value
-  # print 'Caching results in ' + cachefile
-  # with open(cachefile, 'wb') as csvfile:
-  #   writer = csv.writer(csvfile, delimiter = ',')
-  #   for sigma2 in sigma2s:
-  #     MLEs_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
-  #   
-  #     # Calculate accuracy for each trial
-  #     trial_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
-  #     # Calculate mean and standard error across trials
-  #     accuracy = np.nanmean(trial_accuracies)
-  #     accuracy_std_err = np.nanstd(trial_accuracies) / np.sqrt(len(trial_accuracies))
-  #     writer.writerow([sigma2, accuracy, accuracy_std_err])
-  #     print str(sigma2) + ', ' + str(accuracy) + ', ' + str(accuracy_std_err)
-  #     sys.stdout.flush()
+  print 'Caching results in ' + cachefile
+  with open(cachefile, 'wb') as csvfile:
+    writer = csv.writer(csvfile, delimiter = ',')
+    for sigma2 in sigma2s:
+      MLEs_super = [eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2) for trial_data in flattened_data]
+
+      # Calculate accuracy for each trial
+      if use_all_frames:
+        trial_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
+      else:
+        trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
+      # Calculate mean and standard error across trials
+      accuracy = np.nanmean(trial_accuracies)
+      accuracy_std_err = np.nanstd(trial_accuracies) / np.sqrt(len(trial_accuracies))
+      writer.writerow([sigma2, accuracy, accuracy_std_err])
+      print str(sigma2) + ', ' + str(accuracy) + ', ' + str(accuracy_std_err)
+      sys.stdout.flush()
   
   # Run naive model for comparison
   MLEs_super = [naive_eyetracking.get_trackit_MLE(*trial_data) for trial_data in flattened_data]

@@ -31,69 +31,6 @@ data_adult_diff = [preprocess_all(*subject_data) for subject_data in data_adult_
 data_child_same = [preprocess_all(*subject_data) for subject_data in data_child_same]
 data_child_diff = [preprocess_all(*subject_data) for subject_data in data_child_diff]
 
-# For each experiment type, plot histogram of missing data proportion over trials
-# plt.figure(0)
-# plt.subplot(3, 2, 1)
-# plt.hist([np.isnan(trial_data[0,:]).mean() for subject_data in data_adult_0dis for trial_data in subject_data[0]])
-# plt.title('Adult, 0 distractors')
-# plt.xlim(0, 1)
-# plt.ylim(0, 50)
-# 
-# plt.subplot(3, 2, 3)
-# plt.hist([np.isnan(trial_data[0,:]).mean() for subject_data in data_adult_same for trial_data in subject_data[0]])
-# plt.title('Adult, All Same')
-# plt.xlim(0, 1)
-# plt.ylim(0, 50)
-# 
-# plt.subplot(3, 2, 5)
-# plt.hist([np.isnan(trial_data[0,:]).mean() for subject_data in data_adult_diff for trial_data in subject_data[0]])
-# plt.title('Adult, All Different')
-# plt.xlim(0, 1)
-# plt.ylim(0, 50)
-# 
-# plt.subplot(3, 2, 2)
-# plt.hist([np.isnan(trial_data[0,:]).mean() for subject_data in data_child_0dis for trial_data in subject_data[0]])
-# plt.title('Child, 0 distractors')
-# plt.xlim(0, 1)
-# plt.ylim(0, 50)
-# 
-# plt.subplot(3, 2, 4)
-# plt.hist([np.isnan(trial_data[0,:]).mean() for subject_data in data_child_same for trial_data in subject_data[0]])
-# plt.title('Child, All Same')
-# plt.xlim(0, 1)
-# plt.ylim(0, 50)
-# 
-# plt.subplot(3, 2, 6)
-# plt.hist([np.isnan(trial_data[0,:]).mean() for subject_data in data_child_diff for trial_data in subject_data[0]])
-# plt.title('Child, All Different')
-# plt.xlim(0, 1)
-# plt.ylim(0, 50)
-# 
-# plt.gcf().suptitle('Distribution of Proportion of Missing Data per Trial', fontsize = "x-large")
-# mng = plt.get_current_fig_manager()
-# mng.resize(*mng.window.maxsize())
-# plt.show()
-
-# For a range of thresholds between 0 and 1, plot histogram of trials per subject with >= threshold proportion of valid data
-# plt.figure(1)
-# data = data_child_diff
-# condition_name = 'All Different'
-# num_plots = 10
-# x_max = max([len(subject_data[0]) for subject_data in data]) + 1
-# for threshold_idx in range(num_plots):
-#   threshold = threshold_idx / float(num_plots)
-#   print threshold
-#   plt.subplot(num_plots, 1, threshold_idx + 1)
-#   plt.hist([sum([np.mean(np.isnan(trial_data[0,:])) > threshold for trial_data in subject_data[0]]) for subject_data in data], bins = [x/2.0 for x in range(2*x_max)])
-#   plt.xlim(0, x_max)
-#   plt.ylim(0, len(data_child_0dis))
-#   plt.ylabel(str(threshold))
-# plt.gcf().text(0.04, 0.5, 'Threshold', va = 'center', rotation = 'vertical')
-# plt.gcf().suptitle('Distribution of Trials per Subject\nwith Missing Data Proportion at most \"Thresholding\"\n(' + condition_name + ' Condition)', fontsize = "x-large")
-# mng = plt.get_current_fig_manager()
-# mng.resize(*mng.window.maxsize())
-# plt.show()
-
 # Values taken from supervised analysis; TODO: Update these once we've collected more supervised data
 sigma2_adult = 490 ** 2
 sigma2_child = 650 ** 2
@@ -251,13 +188,3 @@ plt.xlabel('Trial Time (frames, at 60Hz)')
 plt.ylabel('Fraction of trials missing data')
 
 plt.show()
-
-
-
-
-
-
-
-
-
-
