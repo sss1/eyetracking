@@ -10,19 +10,45 @@ def jagged_to_numpy(jagged):
   return aligned
 
 # Data preprocessing steps: impute missing eye-tracking data and synchronize by interpolating TrackIt data
-def preprocess_all(eyetrack, target, distractors, labels = None):
+def preprocess_all(eyetrack, target, distractors, labels = None, trial_discard_threshold = 0.5, subject_discard_threshold = 0.5):
+  is_labeled = labels != None
   for trial_idx in range(len(eyetrack)):
     N = len(eyetrack[trial_idx][0]) # Number of eye-tracking frames in trial
     eyetrack[trial_idx] = impute_missing_data_D(eyetrack[trial_idx])
     target[trial_idx] = interpolate_to_length_D(target[trial_idx], N)
     if distractors[trial_idx].size > 0: # For 0 distractor condition
       distractors[trial_idx] = interpolate_to_length_distractors(distractors[trial_idx], N)
-      if labels != None:
+      if is_labeled:
         labels[trial_idx] = __interpolate_to_length_labels(labels[trial_idx], N)
+    if np.mean([np.isnan(x) for x in eyetrack[trial_idx][0, :]]) > trial_discard_threshold:
+      # This trial has too many missing frames; discard entire trial
+      eyetrack[trial_idx] = None
+      target[trial_idx] = None
+      distractors[trial_idx] = None
+      if is_labeled:
+        labels[trial_idx] = None
 
-  if labels != None:
+  if np.mean([trial_data is None for trial_data in eyetrack]) > subject_discard_threshold:
+    # This subject has too many missing trials; discard entire subject data
+    eyetrack = None
+    target = None
+    distractors = None
+    labels = None
+  else:
+    # Remove placeholder None's from discarded trials
+    eyetrack = filter_None(eyetrack)
+    target = filter_None(target)
+    distractors = filter_None(distractors)
+    if is_labeled:
+      labels = filter_None(labels)
+
+  if is_labeled:
     return eyetrack, target, distractors, labels
   return eyetrack, target, distractors
+
+# Removes all instances of None from the list X
+def filter_None(X):
+  return [x for x in X if x is not None]
 
 def __interpolate_to_length_labels(X, N):
   if not N == int(N):

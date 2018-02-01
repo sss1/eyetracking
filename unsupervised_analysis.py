@@ -26,10 +26,14 @@ print 'Child Diff: ' + str(np.mean(np.isnan([x for subject_data in data_child_di
 # Preprocess data (synchronize TrackIt with eyetracking, and interpolate some missing data
 # data_adult_0dis = [preprocess_all(*subject_data) for subject_data in data_adult_0dis]
 data_adult_same = [preprocess_all(*subject_data) for subject_data in data_adult_same]
+data_adult_same = [subject_data for subject_data in data_adult_same if subject_data[0] is not None]
 data_adult_diff = [preprocess_all(*subject_data) for subject_data in data_adult_diff]
+data_adult_diff = [subject_data for subject_data in data_adult_diff if subject_data[0] is not None]
 # data_child_0dis = [preprocess_all(*subject_data) for subject_data in data_child_0dis]
 data_child_same = [preprocess_all(*subject_data) for subject_data in data_child_same]
+data_child_same = [subject_data for subject_data in data_child_same if subject_data[0] is not None]
 data_child_diff = [preprocess_all(*subject_data) for subject_data in data_child_diff]
+data_child_diff = [subject_data for subject_data in data_child_diff if subject_data[0] is not None]
 
 # Values taken from supervised analysis; TODO: Update these once we've collected more supervised data
 sigma2_adult = 490 ** 2
