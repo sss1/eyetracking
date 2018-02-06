@@ -21,8 +21,13 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
 
   data = [load_full_subject_data(*entry, filter_threshold = 1, is_supervised = True) for entry in data_source]
 
+  if use_all_frames:
+    name = 'all_frames'
+  else:
+    name = 'nonmissing_only'
+
   print '\nRunning ' + dataset_name + ' supervised data...'
-  cachefile = dp.root + 'cache/' + dataset_name.lower() + '_supervised_analysis_nonmissing_only.csv'
+  cachefile = dp.root + 'cache/' + dataset_name.lower() + '_supervised_analysis_' + name + '.csv'
 
   print 'Missing data before interpolation: ' + \
     str(np.mean(np.isnan([x for subject_data in data for trial_data in subject_data[0] for x in trial_data[0]])))
@@ -34,6 +39,7 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
   
   # Preprocess data
   data = [preprocess_all(*subject_data) for subject_data in data]
+  data = [subject_data for subject_data in data if subject_data[0] is not None]
   
   # Split off true labels from unsupervised data
   labels = [subject_data[3] for subject_data in data]
@@ -41,11 +47,11 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
   
   print 'Missing data after interpolation: ' + \
     str(np.mean(np.isnan([x for subject_data in data for trial_data in subject_data[0] for x in trial_data[0]])))
-
   sys.stdout.flush()
 
   # Flatten data into trials (i.e., across subjects)
   flattened_data = [trial_data for subject_data in data for trial_data in zip(*subject_data)]
+  print 'There are ' + str(len(flattened_data)) + ' remaining usable trials after preprocessing.'
   
   # Flatten labels into frames (i.e., across subject)
   flattened_labels = [np.array(trial_data, dtype = int) for subject_data in labels for trial_data in subject_data]
@@ -61,9 +67,9 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
 
       # Calculate accuracy for each trial
       if use_all_frames:
-        trial_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
-      else:
         trial_accuracies = [(estimate == truth).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
+      else:
+        trial_accuracies = [(estimate[estimate > -1] == truth[estimate > -1]).mean() for (estimate, truth) in zip(MLEs_super, flattened_labels)]
       # Calculate mean and standard error across trials
       accuracy = np.nanmean(trial_accuracies)
       accuracy_std_err = np.nanstd(trial_accuracies) / np.sqrt(len(trial_accuracies))
@@ -109,7 +115,7 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
   naive_line, = plt.plot(min_max_x, naive_val, c = 'g', label = 'Naive')
   naive_lower_band, = plt.plot(min_max_x, naive_val - naive_yerr, c = 'g', ls = '--', zorder = 2) # upper confidence band
   naive_upper_band, = plt.plot(min_max_x, naive_val + naive_yerr, c = 'g', ls = '--', zorder = 2) # lower confidence band
-  # Plot accuracy for random guessing
+  # Plot accuracy of random guessing; note that this is only accurate when using only nonmissing frames
   chance_line, = plt.plot(min_max_x, [chance_accuracy, chance_accuracy], c = 'r', label = 'Chance')
   
   plt.xlabel('$\sigma$ (pixels)', fontsize = 24)
@@ -131,8 +137,11 @@ def run_analysis(dataset_name, show_meta, use_all_frames):
     plt.legend(handles = [acc_line, naive_line, chance_line, opt_point], numpoints = 3, scatterpoints = 1, fontsize = 16)
     plt.gcf().tight_layout()
   # plt.show()
-  plt.gcf().savefig('/home/sss1/Desktop/academic/projects/eyetracking/figs/' + dataset_name.lower() + '_supervised_performance_over_sigma.pdf')
+  plt.gcf().savefig('/home/sss1/Desktop/academic/projects/eyetracking/figs/' + dataset_name.lower() + '_supervised_performance_over_sigma_' + name + '.pdf')
   plt.clf()
+
+run_analysis('Adult', show_meta = True, use_all_frames = True)
+run_analysis('Child', show_meta = False, use_all_frames = True)
 
 run_analysis('Adult', show_meta = True, use_all_frames = False)
 run_analysis('Child', show_meta = False, use_all_frames = False)
