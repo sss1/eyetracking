@@ -205,6 +205,16 @@ trackit_fnames_child_supervised = ["A228_super_blinky.csv", \
                                    "A308_super_blinky.csv", \
                                    "A311_super_blinky.csv"]
 
+# Data from an experiment where we asked children to hug large foam blocks,
+# in an attempt to reduce movement and thereby improve eye-tracker data quality
+eyetrack_fnames_foam_block_unsupervised = ["L163_2_10_2018_11_22.csv", \
+                                           "L164_2_23_2018_10_10.csv", \
+                                           "L165_3_22_2018_11_31.csv"]
+
+trackit_fnames_foam_block_unsupervised = ["L163_Int.csv", \
+                                           "L164_Int.csv", \
+                                           "L165alldiff.csv"]
+
 # Old buggy data
 # eyetrack_fnames_child_supervised = ["A225switch_12_13_2017_8_57.csv", \
 #                                     "A250switch_12_13_2017_9_16.csv", \
@@ -238,3 +248,5 @@ trackit_fnames_adult_supervised = [root + "switch_calibration/adult/TrackItOutpu
 eyetrack_fnames_adult_supervised = [root + "switch_calibration/adult/EyeTracker/" + fname for fname in eyetrack_fnames_adult_supervised]
 trackit_fnames_child_supervised = [root + "switch_calibration/child/TrackItOutput/" + fname for fname in trackit_fnames_child_supervised]
 eyetrack_fnames_child_supervised = [root + "switch_calibration/child/EyeTracker/" + fname for fname in eyetrack_fnames_child_supervised]
+eyetrack_fnames_foam_block_unsupervised = [root + "foam_block_testing/EyeTracker/" + fname for fname in eyetrack_fnames_foam_block_unsupervised]
+trackit_fnames_foam_block_unsupervised = [root + "foam_block_testing/TrackItOutput/" + fname for fname in trackit_fnames_foam_block_unsupervised]
