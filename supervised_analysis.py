@@ -6,7 +6,7 @@ from scipy.stats import norm
 import sys
 
 from load_data import load_full_subject_data
-import data_paths as dp
+import data_paths_COGSCI18 as dp # Pilot and supoervised data for CogSci18 paper
 import naive_eyetracking
 import eyetracking_hmm
 from util import preprocess_all

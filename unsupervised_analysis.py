@@ -3,7 +3,7 @@ import eyetracking_hmm
 import naive_eyetracking
 import matplotlib.pyplot as plt
 from util import preprocess_all, jagged_to_numpy
-import data_paths as dp
+import data_paths_COGSCI18 as dp # Pilot and supoervised data for CogSci18 paper
 import timeit
 import time
 import numpy as np
