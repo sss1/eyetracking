@@ -3,7 +3,7 @@ import eyetracking_hmm
 import naive_eyetracking
 import matplotlib.pyplot as plt
 from util import preprocess_all, jagged_to_numpy
-import data_paths_COGSCI18 as dp # Pilot and supoervised data for CogSci18 paper
+import data_paths_COGSCI18 as dp # Pilot and supervised dataset for CogSci18 paper
 import timeit
 import time
 import numpy as np
@@ -35,9 +35,9 @@ data_child_same = [subject_data for subject_data in data_child_same if subject_d
 data_child_diff = [preprocess_all(*subject_data) for subject_data in data_child_diff]
 data_child_diff = [subject_data for subject_data in data_child_diff if subject_data[0] is not None]
 
-# Values taken from supervised analysis; TODO: Update these once we've collected more supervised data
+# Values taken from supervised analysis
 sigma2_adult = 490 ** 2
-sigma2_child = 650 ** 2
+sigma2_child = 870 ** 2
 
 print '\nMissing data after interpolation:'
 print 'Adult Same: ' + str(np.mean(np.isnan([x for subject_data in data_adult_same for trial_data in subject_data[0] for x in trial_data[0]])))
@@ -114,12 +114,10 @@ aligned_adult_same = jagged_to_numpy([[float(x == 0) for x in trial_data] for su
 aligned_adult_diff = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_adult_diff for trial_data in subject_data])
 aligned_child_same = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_child_same for trial_data in subject_data])
 aligned_child_diff = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_child_diff for trial_data in subject_data])
-
 plt.plot(np.nanmean(aligned_adult_same, axis = 0))
 plt.plot(np.nanmean(aligned_adult_diff, axis = 0))
 plt.plot(np.nanmean(aligned_child_same, axis = 0))
 plt.plot(np.nanmean(aligned_child_diff, axis = 0))
-
 plt.legend(['Adult Same', 'Adult Diff', 'Child Same', 'Child Diff'])
 
 # For each dataset, plot a vertical line indicating the length of the shortest trial
