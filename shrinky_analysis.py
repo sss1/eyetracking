@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from util import preprocess_all, jagged_to_numpy
 import data_paths_full as dp # Large unsupervised (shrinky) dataset
 import numpy as np
+from read_ages import read_ages
 
 # load datasets
 data_shrinky = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_shrinky, dp.eyetrack_fnames_shrinky)]
@@ -17,7 +18,7 @@ print 'No Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_noshrink
 # Preprocess data (synchronize TrackIt with eyetracking, and interpolate some missing data, and discard trials/subjects
 # with too much missing data
 trial_discard_threshold = 0.5 # 0 discards trials with *any* missing data; 1 keeps all trials
-subject_discard_threshold = 0.5 # 0 discards subjects with *any* missing trials; 1 keeps all subjects
+subject_discard_threshold = 1 # 0 discards subjects with *any* missing trials; 1 keeps all subjects
 data_shrinky = [preprocess_all(*subject_data, \
                                trial_discard_threshold = trial_discard_threshold, \
                                subject_discard_threshold = subject_discard_threshold) \
@@ -51,7 +52,6 @@ MLEs_cache_file = np.load(dp.root + 'cache/' + 'MLEs_shrinky_analysis.npz')
 MLEs_shrinky = MLEs_cache_file['MLEs_shrinky']
 MLEs_noshrinky = MLEs_cache_file['MLEs_noshrinky']
 
-
 # Plot proportion of (all) trials on target over trial time
 plt.figure(1)
 aligned_shrinky = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
@@ -83,7 +83,7 @@ plt.gca().set_color_cycle(None)
 plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
 plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
 plt.xlabel('Time (frames, at 60Hz)')
-plt.ylabel('Fraction of non-missing or interpolated trials on target')
+plt.ylabel('Fraction of non-missing or interpolated frames on target')
 
 # Plot proportion of missing data over trial time
 plt.figure(3)
@@ -96,6 +96,15 @@ plt.gca().set_color_cycle(None)
 plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
 plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
 plt.xlabel('Trial Time (frames, at 60Hz)')
-plt.ylabel('Fraction of trials missing data')
+plt.ylabel('Fraction of frames missing data')
 
+# Plot of subject performance over age
+plt.figure(4)
+performance_shrinky = [np.nanmean([float(x == 0) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky]
+performance_noshrinky = [np.nanmean([float(x == 0) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky]
+shrinky_ages, noshrinky_ages = read_ages()
+plt.scatter(shrinky_ages, performance_shrinky)
+plt.scatter(noshrinky_ages, performance_noshrinky)
+plt.xlabel('Age (Years)')
+plt.ylabel('Fraction of all frames on target')
 plt.show()
