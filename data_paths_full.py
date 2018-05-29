@@ -1,6 +1,6 @@
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
-root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
+root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
+# root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
 
 eyetrack_fnames_shrinky = ["AF10shrinky_5_14_2018_9_48.csv", \
                            "AF11shrinky_5_14_2018_10_20.csv", \
@@ -33,7 +33,6 @@ eyetrack_fnames_shrinky = ["AF10shrinky_5_14_2018_9_48.csv", \
                            "M147shrinky_5_4_2018_10_59.csv", \
                            "R11shrinky_4_24_2018_9_28.csv", \
                            "R12shrinky_4_26_2018_9_33.csv", \
-                           "R16shrinky_4_24_2018_10_15.csv", \
                            "R17shrinky_4_24_2018_10_34.csv", \
                            "R34shrinky_4_26_2018_10_10.csv", \
                            "R35shrinky_5_8_2018_10_8.csv", \
@@ -72,7 +71,6 @@ trackit_fnames_shrinky = ["AF10shrinky.csv", \
                           "M147shrinky.csv", \
                           "R11shrinky.csv", \
                           "R12shrinky.csv", \
-                          "R16shrinky.csv", \
                           "R17shrinky.csv", \
                           "R34shrinky.csv", \
                           "R35shrinky.csv", \
@@ -157,3 +155,4 @@ trackit_fnames_shrinky  = [root + "shrinky/TrackItOutput/shrinky/" + fname for f
 eyetrack_fnames_shrinky = [root + "shrinky/EyeTracker/shrinky/" + fname for fname in eyetrack_fnames_shrinky]
 trackit_fnames_noshrinky  = [root + "shrinky/TrackItOutput/noshrinky/" + fname for fname in trackit_fnames_noshrinky]
 eyetrack_fnames_noshrinky = [root + "shrinky/EyeTracker/noshrinky/" + fname for fname in eyetrack_fnames_noshrinky]
+shrinky_ages_file = root + "shrinky/shrinky_ages_clean.csv"
