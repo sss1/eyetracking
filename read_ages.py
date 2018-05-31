@@ -1,6 +1,7 @@
 import csv
 import math
 from data_paths_full import shrinky_ages_file as ages_path
+import numpy as np
 
 def read_ages():
   shrinky_ages = []
@@ -17,4 +18,4 @@ def read_ages():
         if not math.isnan(new_val): # skip nans
           noshrinky_ages.append(new_val)
       row_idx += 1
-  return shrinky_ages, noshrinky_ages
+  return np.asarray(shrinky_ages), np.asarray(noshrinky_ages)

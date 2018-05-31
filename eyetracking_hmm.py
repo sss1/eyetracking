@@ -5,6 +5,8 @@ from math import log
 # sigma2 - spherical emission variance (i.e., E[||X - E[X]||_2^2])
 def get_trackit_MLE(eye_track, target, distractors, sigma2 = 100 ** 2):
 
+  print 'Next trial'
+
   X = eye_track.swapaxes(0, 1)
   mu = np.concatenate((target[None, :, :], distractors)).swapaxes(1, 2)
   return get_MLE(X, mu, sigma2 = sigma2)
