@@ -31,14 +31,12 @@ data_shrinky = [preprocess_all(*subject_data, \
                                subject_discard_threshold = subject_discard_threshold) \
                 for subject_data in data_shrinky]
 ages_shrinky = [age for (age,subject_data) in zip(ages_shrinky, data_shrinky) if subject_data[0] is not None]
-print ages_shrinky
 data_shrinky = [subject_data for subject_data in data_shrinky if subject_data[0] is not None]
 data_noshrinky = [preprocess_all(*subject_data, \
                                trial_discard_threshold = trial_discard_threshold, \
                                subject_discard_threshold = subject_discard_threshold) \
                 for subject_data in data_noshrinky]
 ages_noshrinky = [age for (age,subject_data) in zip(ages_noshrinky, data_noshrinky) if subject_data[0] is not None]
-print ages_noshrinky
 data_noshrinky = [subject_data for subject_data in data_noshrinky if subject_data[0] is not None]
 
 print '\nMissing data after interpolation and discarding:'
@@ -51,7 +49,7 @@ sigma2_child = 870 ** 2
 # Apply HMM analysis to each dataset
 # Each MLEs_*_* is a subject X trial X timepoint array of states, taking integer values in [0, num_distractors]
 MLEs_shrinky = [[eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2_child) for trial_data in zip(*subject_data)] for subject_data in data_shrinky]
-MLEs_noshrinky = [[eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2_adult) for trial_data in zip(*subject_data)] for subject_data in data_noshrinky]
+MLEs_noshrinky = [[eyetracking_hmm.get_trackit_MLE(*trial_data, sigma2 = sigma2_child) for trial_data in zip(*subject_data)] for subject_data in data_noshrinky]
 # Since HMM analysis is slow, cache the classifications (estimating state sequences)
 np.savez(dp.root + 'cache/' + 'MLEs_shrinky_analysis.npz', \
          MLEs_shrinky = MLEs_shrinky, \
