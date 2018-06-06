@@ -59,177 +59,193 @@ import pyqt_fit.bootstrap as bs
 
 # Load HMM analysis classifications from cache file
 MLEs_cache_file = np.load(dp.root + 'cache/' + 'MLEs_shrinky_analysis.npz')
-ages_shrinky = MLEs_cache_file['ages_shrinky']
-ages_noshrinky = MLEs_cache_file['ages_noshrinky']
+# ages_shrinky = MLEs_cache_file['ages_shrinky']
+# ages_noshrinky = MLEs_cache_file['ages_noshrinky']
 MLEs_shrinky = MLEs_cache_file['MLEs_shrinky']
 MLEs_noshrinky = MLEs_cache_file['MLEs_noshrinky']
 
+# # Plot proportion of (all) trials on target over trial time
+# plt.figure(1)
+# aligned_shrinky = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
+# aligned_noshrinky = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
+# plt.plot(np.nanmean(aligned_shrinky, axis = 0))
+# plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
+# plt.legend(['Shrinky', 'No Shrinky'])
+# # For each dataset, plot a vertical line indicating the length of the shortest trial
+# min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
+# min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
+# plt.gca().set_color_cycle(None)
+# plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
+# plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
+# plt.xlabel('Time (frames, at 60Hz)')
+# plt.ylabel('Fraction of all trials on target')
+# 
+# # Plot proportion of (non-missing or interpolated) trials on target over trial time
+# plt.figure(2)
+# def on_target_or_nan(x): # replace missing data (encoded as -1) with nan
+#   if x == -1:
+#     return float("nan")
+#   return x == 0
+# aligned_shrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
+# aligned_noshrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
+# plt.plot(np.nanmean(aligned_shrinky, axis = 0))
+# plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
+# plt.legend(['Shrinky', 'No Shrinky'])
+# plt.gca().set_color_cycle(None)
+# plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
+# plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
+# plt.xlabel('Time (frames, at 60Hz)')
+# plt.ylabel('Fraction of non-missing or interpolated frames on target')
+# 
+# # Plot proportion of missing data over trial time
+# plt.figure(3)
+# aligned_shrinky = jagged_to_numpy([[float(x == -1) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
+# aligned_noshrinky = jagged_to_numpy([[float(x == -1) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
+# plt.plot(np.nanmean(aligned_shrinky, axis = 0))
+# plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
+# plt.legend(['Shrinky', 'No Shrinky'])
+# plt.gca().set_color_cycle(None)
+# plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
+# plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
+# plt.xlabel('Trial Time (frames, at 60Hz)')
+# plt.ylabel('Fraction of frames missing data')
+# 
+# # Plot of subject performance (out of all frames) over age
+# plt.figure(4)
+# performance_shrinky = np.asarray([np.nanmean([float(x == 0) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky])
+# SEs_shrinky = [np.asarray(np.nanstd([float(x == 0) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_shrinky]
+# performance_noshrinky = np.asarray([np.nanmean([float(x == 0) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky])
+# SEs_noshrinky = [np.asarray(np.nanstd([float(x == 0) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_noshrinky]
+# plt.scatter(ages_shrinky, performance_shrinky)
+# plt.scatter(ages_noshrinky, performance_noshrinky)
+# plt.errorbar(ages_shrinky, performance_shrinky, yerr = SEs_shrinky, linestyle = '')
+# plt.errorbar(ages_noshrinky, performance_noshrinky, yerr = SEs_noshrinky, linestyle = '')
+# 
+# plt.legend(['Shrinky', 'No Shrinky'])
+# plt.xlabel('Age (Years)')
+# plt.ylabel('Proportion of all frames on target')
+# 
+# # Plot regression lines
+# plt.gca().set_color_cycle(None)
+# # SHRINKY condition
+# X_shrinky = ages_shrinky[~np.isnan(performance_shrinky), np.newaxis]
+# y_shrinky = performance_shrinky[~np.isnan(performance_shrinky)]
+# regr_shrinky = linear_model.LinearRegression()
+# regr_shrinky.fit(X_shrinky, y_shrinky)
+# performance_pred_shrinky = regr_shrinky.predict(X_shrinky)
+# plt.plot(X_shrinky, performance_pred_shrinky)
+# # NOSHRINKY condition
+# X_noshrinky = ages_noshrinky[~np.isnan(performance_noshrinky), np.newaxis]
+# y_noshrinky = performance_noshrinky[~np.isnan(performance_noshrinky)]
+# regr_noshrinky = linear_model.LinearRegression()
+# regr_noshrinky.fit(X_noshrinky, y_noshrinky)
+# performance_pred_noshrinky = regr_noshrinky.predict(X_noshrinky)
+# plt.plot(X_noshrinky, performance_pred_noshrinky)
+# # # Nonparametric (Nadaraya-Watson) regression
+# # plt.gca().set_color_cycle(None)
+# # grid = np.r_[3:6:512j]
+# # # SHRINKY condition
+# # k0 = smooth.NonParamRegression(X_shrinky[:,0], y_shrinky, method=npr_methods.SpatialAverage())
+# # k0.fit()
+# # plt.plot(grid, k0(grid), label="Spatial Averaging", linewidth=2)
+# # def fit(xs, ys):
+# #   est = smooth.NonParamRegression(xs, ys, method=npr_methods.LocalPolynomialKernel(q=2))
+# #   est.fit()
+# #   return est
+# # result = bs.bootstrap(fit, X_shrinky[:,0], y_shrinky, eval_points = grid, CI = (95,99), repeats = 1000)
+# # plt.plot(grid, result.CIs[0][0,0], 'g--', label='95% CI', linewidth=2)
+# # plt.plot(grid, result.CIs[0][0,1], 'g--', linewidth=2)
+# # plt.fill_between(grid, result.CIs[0][0,0], result.CIs[0][0,1], color='g', alpha=0.25)
+# # # NOSHRINKY condition
+# # k0 = smooth.NonParamRegression(X_noshrinky[:,0], y_noshrinky, method=npr_methods.SpatialAverage())
+# # k0.fit()
+# # plt.plot(grid, k0(grid), label="Spatial Averaging", linewidth=2)
+# # result = bs.bootstrap(fit, X_noshrinky[:,0], y_noshrinky, eval_points = grid, CI = (95,99), repeats = 1000)
+# # plt.plot(grid, result.CIs[0][0,0], 'g--', label='95% CI', linewidth=2)
+# # plt.plot(grid, result.CIs[0][0,1], 'g--', linewidth=2)
+# # plt.fill_between(grid, result.CIs[0][0,0], result.CIs[0][0,1], color='g', alpha=0.25)
+# plt.ylim((0,1))
+# 
+# # Plot of subject performance (out of all non-missing/interpolated) over age
+# plt.figure(5)
+# performance_shrinky = np.asarray([np.nanmean([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky])
+# SEs_shrinky = [np.asarray(np.nanstd([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_shrinky]
+# performance_noshrinky = np.asarray([np.nanmean([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky])
+# SEs_noshrinky = [np.asarray(np.nanstd([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_noshrinky]
+# plt.scatter(ages_shrinky, performance_shrinky)
+# plt.scatter(ages_noshrinky, performance_noshrinky)
+# plt.errorbar(ages_shrinky, performance_shrinky, yerr = SEs_shrinky, linestyle = '')
+# plt.errorbar(ages_noshrinky, performance_noshrinky, yerr = SEs_noshrinky, linestyle = '')
+# 
+# plt.legend(['Shrinky', 'No Shrinky'])
+# plt.xlabel('Age (Years)')
+# plt.ylabel('Proportion of all frames on target')
+# 
+# # Plot regression lines
+# plt.gca().set_color_cycle(None)
+# # SHRINKY condition
+# X_shrinky = ages_shrinky[~np.isnan(performance_shrinky), np.newaxis]
+# y_shrinky = performance_shrinky[~np.isnan(performance_shrinky)]
+# regr_shrinky = linear_model.LinearRegression()
+# regr_shrinky.fit(X_shrinky, y_shrinky)
+# performance_pred_shrinky = regr_shrinky.predict(X_shrinky)
+# plt.plot(X_shrinky, performance_pred_shrinky)
+# # NOSHRINKY condition
+# X_noshrinky = ages_noshrinky[~np.isnan(performance_noshrinky), np.newaxis]
+# y_noshrinky = performance_noshrinky[~np.isnan(performance_noshrinky)]
+# regr_noshrinky = linear_model.LinearRegression()
+# regr_noshrinky.fit(X_noshrinky, y_noshrinky)
+# performance_pred_noshrinky = regr_noshrinky.predict(X_noshrinky)
+# plt.plot(X_noshrinky, performance_pred_noshrinky)
+# plt.ylim((0,1))
+# 
+# # Plot of missing data (proportion of all frames) over age
+# plt.figure(6)
+# missing_data_shrinky = np.asarray([np.nanmean([float(x == -1) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky])
+# # SEs_shrinky = [np.asarray(np.nanstd([float(x == -1) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_shrinky]
+# missing_data_noshrinky = np.asarray([np.nanmean([float(x == -1) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky])
+# # SEs_noshrinky = [np.asarray(np.nanstd([float(x == -1) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_noshrinky]
+# plt.scatter(ages_shrinky, missing_data_shrinky)
+# plt.scatter(ages_noshrinky, missing_data_noshrinky)
+# # plt.errorbar(ages_shrinky, missing_data_shrinky, yerr = SEs_shrinky, linestyle = '')
+# # plt.errorbar(ages_noshrinky, missing_data_noshrinky, yerr = SEs_noshrinky, linestyle = '')
+# 
+# plt.legend(['Shrinky', 'No Shrinky'])
+# plt.xlabel('Age (Years)')
+# plt.ylabel('Proportion of missing frames')
+# 
+# # Plot regression lines
+# plt.gca().set_color_cycle(None)
+# # SHRINKY condition
+# X_shrinky = ages_shrinky[~np.isnan(missing_data_shrinky), np.newaxis]
+# y_shrinky = missing_data_shrinky[~np.isnan(missing_data_shrinky)]
+# regr_shrinky = linear_model.LinearRegression()
+# regr_shrinky.fit(X_shrinky, y_shrinky)
+# missing_data_pred_shrinky = regr_shrinky.predict(X_shrinky)
+# plt.plot(X_shrinky, missing_data_pred_shrinky)
+# # NOSHRINKY condition
+# X_noshrinky = ages_noshrinky[~np.isnan(missing_data_noshrinky), np.newaxis]
+# y_noshrinky = missing_data_noshrinky[~np.isnan(missing_data_noshrinky)]
+# regr_noshrinky = linear_model.LinearRegression()
+# regr_noshrinky.fit(X_noshrinky, y_noshrinky)
+# missing_data_pred_noshrinky = regr_noshrinky.predict(X_noshrinky)
+# plt.plot(X_noshrinky, missing_data_pred_noshrinky)
+# plt.ylim((0,1))
+
 # Plot proportion of (all) trials on target over trial time
-plt.figure(1)
-aligned_shrinky = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
-aligned_noshrinky = jagged_to_numpy([[float(x == 0) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
-plt.plot(np.nanmean(aligned_shrinky, axis = 0))
-plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
-plt.legend(['Shrinky', 'No Shrinky'])
+plt.figure(7)
+aligned_by_subject_shrinky = jagged_to_numpy([np.nanmean(jagged_to_numpy([[float(x == 0) for x in trial_data] for trial_data in subject_data])) for subject_data in MLEs_noshrinky])
+
+plt.plot(aligned_by_subject_shrinky)
+# plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
+# plt.legend(['Shrinky', 'No Shrinky'])
 # For each dataset, plot a vertical line indicating the length of the shortest trial
-min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
-min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
-plt.gca().set_color_cycle(None)
-plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
-plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
+# min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
+# min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
+# plt.gca().set_color_cycle(None)
+# plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
+# plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
 plt.xlabel('Time (frames, at 60Hz)')
 plt.ylabel('Fraction of all trials on target')
-
-# Plot proportion of (non-missing or interpolated) trials on target over trial time
-plt.figure(2)
-def on_target_or_nan(x): # replace missing data (encoded as -1) with nan
-  if x == -1:
-    return float("nan")
-  return x == 0
-aligned_shrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
-aligned_noshrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
-plt.plot(np.nanmean(aligned_shrinky, axis = 0))
-plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
-plt.legend(['Shrinky', 'No Shrinky'])
-plt.gca().set_color_cycle(None)
-plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
-plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
-plt.xlabel('Time (frames, at 60Hz)')
-plt.ylabel('Fraction of non-missing or interpolated frames on target')
-
-# Plot proportion of missing data over trial time
-plt.figure(3)
-aligned_shrinky = jagged_to_numpy([[float(x == -1) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
-aligned_noshrinky = jagged_to_numpy([[float(x == -1) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
-plt.plot(np.nanmean(aligned_shrinky, axis = 0))
-plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
-plt.legend(['Shrinky', 'No Shrinky'])
-plt.gca().set_color_cycle(None)
-plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
-plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
-plt.xlabel('Trial Time (frames, at 60Hz)')
-plt.ylabel('Fraction of frames missing data')
-
-# Plot of subject performance (out of all frames) over age
-plt.figure(4)
-performance_shrinky = np.asarray([np.nanmean([float(x == 0) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky])
-SEs_shrinky = [np.asarray(np.nanstd([float(x == 0) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_shrinky]
-performance_noshrinky = np.asarray([np.nanmean([float(x == 0) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky])
-SEs_noshrinky = [np.asarray(np.nanstd([float(x == 0) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_noshrinky]
-plt.scatter(ages_shrinky, performance_shrinky)
-plt.scatter(ages_noshrinky, performance_noshrinky)
-plt.errorbar(ages_shrinky, performance_shrinky, yerr = SEs_shrinky, linestyle = '')
-plt.errorbar(ages_noshrinky, performance_noshrinky, yerr = SEs_noshrinky, linestyle = '')
-
-plt.legend(['Shrinky', 'No Shrinky'])
-plt.xlabel('Age (Years)')
-plt.ylabel('Proportion of all frames on target')
-
-# Plot regression lines
-plt.gca().set_color_cycle(None)
-# SHRINKY condition
-X_shrinky = ages_shrinky[~np.isnan(performance_shrinky), np.newaxis]
-y_shrinky = performance_shrinky[~np.isnan(performance_shrinky)]
-regr_shrinky = linear_model.LinearRegression()
-regr_shrinky.fit(X_shrinky, y_shrinky)
-performance_pred_shrinky = regr_shrinky.predict(X_shrinky)
-plt.plot(X_shrinky, performance_pred_shrinky)
-# NOSHRINKY condition
-X_noshrinky = ages_noshrinky[~np.isnan(performance_noshrinky), np.newaxis]
-y_noshrinky = performance_noshrinky[~np.isnan(performance_noshrinky)]
-regr_noshrinky = linear_model.LinearRegression()
-regr_noshrinky.fit(X_noshrinky, y_noshrinky)
-performance_pred_noshrinky = regr_noshrinky.predict(X_noshrinky)
-plt.plot(X_noshrinky, performance_pred_noshrinky)
-# # Nonparametric (Nadaraya-Watson) regression
-# plt.gca().set_color_cycle(None)
-# grid = np.r_[3:6:512j]
-# # SHRINKY condition
-# k0 = smooth.NonParamRegression(X_shrinky[:,0], y_shrinky, method=npr_methods.SpatialAverage())
-# k0.fit()
-# plt.plot(grid, k0(grid), label="Spatial Averaging", linewidth=2)
-# def fit(xs, ys):
-#   est = smooth.NonParamRegression(xs, ys, method=npr_methods.LocalPolynomialKernel(q=2))
-#   est.fit()
-#   return est
-# result = bs.bootstrap(fit, X_shrinky[:,0], y_shrinky, eval_points = grid, CI = (95,99), repeats = 1000)
-# plt.plot(grid, result.CIs[0][0,0], 'g--', label='95% CI', linewidth=2)
-# plt.plot(grid, result.CIs[0][0,1], 'g--', linewidth=2)
-# plt.fill_between(grid, result.CIs[0][0,0], result.CIs[0][0,1], color='g', alpha=0.25)
-# # NOSHRINKY condition
-# k0 = smooth.NonParamRegression(X_noshrinky[:,0], y_noshrinky, method=npr_methods.SpatialAverage())
-# k0.fit()
-# plt.plot(grid, k0(grid), label="Spatial Averaging", linewidth=2)
-# result = bs.bootstrap(fit, X_noshrinky[:,0], y_noshrinky, eval_points = grid, CI = (95,99), repeats = 1000)
-# plt.plot(grid, result.CIs[0][0,0], 'g--', label='95% CI', linewidth=2)
-# plt.plot(grid, result.CIs[0][0,1], 'g--', linewidth=2)
-# plt.fill_between(grid, result.CIs[0][0,0], result.CIs[0][0,1], color='g', alpha=0.25)
-plt.ylim((0,1))
-
-# Plot of subject performance (out of all non-missing/interpolated) over age
-plt.figure(5)
-performance_shrinky = np.asarray([np.nanmean([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky])
-SEs_shrinky = [np.asarray(np.nanstd([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_shrinky]
-performance_noshrinky = np.asarray([np.nanmean([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky])
-SEs_noshrinky = [np.asarray(np.nanstd([on_target_or_nan(x) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_noshrinky]
-plt.scatter(ages_shrinky, performance_shrinky)
-plt.scatter(ages_noshrinky, performance_noshrinky)
-plt.errorbar(ages_shrinky, performance_shrinky, yerr = SEs_shrinky, linestyle = '')
-plt.errorbar(ages_noshrinky, performance_noshrinky, yerr = SEs_noshrinky, linestyle = '')
-
-plt.legend(['Shrinky', 'No Shrinky'])
-plt.xlabel('Age (Years)')
-plt.ylabel('Proportion of all frames on target')
-
-# Plot regression lines
-plt.gca().set_color_cycle(None)
-# SHRINKY condition
-X_shrinky = ages_shrinky[~np.isnan(performance_shrinky), np.newaxis]
-y_shrinky = performance_shrinky[~np.isnan(performance_shrinky)]
-regr_shrinky = linear_model.LinearRegression()
-regr_shrinky.fit(X_shrinky, y_shrinky)
-performance_pred_shrinky = regr_shrinky.predict(X_shrinky)
-plt.plot(X_shrinky, performance_pred_shrinky)
-# NOSHRINKY condition
-X_noshrinky = ages_noshrinky[~np.isnan(performance_noshrinky), np.newaxis]
-y_noshrinky = performance_noshrinky[~np.isnan(performance_noshrinky)]
-regr_noshrinky = linear_model.LinearRegression()
-regr_noshrinky.fit(X_noshrinky, y_noshrinky)
-performance_pred_noshrinky = regr_noshrinky.predict(X_noshrinky)
-plt.plot(X_noshrinky, performance_pred_noshrinky)
-plt.ylim((0,1))
-
-# Plot of missing data (proportion of all frames) over age
-plt.figure(6)
-missing_data_shrinky = np.asarray([np.nanmean([float(x == -1) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_shrinky])
-# SEs_shrinky = [np.asarray(np.nanstd([float(x == -1) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_shrinky]
-missing_data_noshrinky = np.asarray([np.nanmean([float(x == -1) for trial_data in subject_data for x in trial_data]) for subject_data in MLEs_noshrinky])
-# SEs_noshrinky = [np.asarray(np.nanstd([float(x == -1) for trial_data in subject_data for x in trial_data]))/math.sqrt(len(subject_data)) for subject_data in MLEs_noshrinky]
-plt.scatter(ages_shrinky, missing_data_shrinky)
-plt.scatter(ages_noshrinky, missing_data_noshrinky)
-# plt.errorbar(ages_shrinky, missing_data_shrinky, yerr = SEs_shrinky, linestyle = '')
-# plt.errorbar(ages_noshrinky, missing_data_noshrinky, yerr = SEs_noshrinky, linestyle = '')
-
-plt.legend(['Shrinky', 'No Shrinky'])
-plt.xlabel('Age (Years)')
-plt.ylabel('Proportion of missing frames')
-
-# Plot regression lines
-plt.gca().set_color_cycle(None)
-# SHRINKY condition
-X_shrinky = ages_shrinky[~np.isnan(missing_data_shrinky), np.newaxis]
-y_shrinky = missing_data_shrinky[~np.isnan(missing_data_shrinky)]
-regr_shrinky = linear_model.LinearRegression()
-regr_shrinky.fit(X_shrinky, y_shrinky)
-missing_data_pred_shrinky = regr_shrinky.predict(X_shrinky)
-plt.plot(X_shrinky, missing_data_pred_shrinky)
-# NOSHRINKY condition
-X_noshrinky = ages_noshrinky[~np.isnan(missing_data_noshrinky), np.newaxis]
-y_noshrinky = missing_data_noshrinky[~np.isnan(missing_data_noshrinky)]
-regr_noshrinky = linear_model.LinearRegression()
-regr_noshrinky.fit(X_noshrinky, y_noshrinky)
-missing_data_pred_noshrinky = regr_noshrinky.predict(X_noshrinky)
-plt.plot(X_noshrinky, missing_data_pred_noshrinky)
-plt.ylim((0,1))
 
 plt.show()
