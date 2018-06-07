@@ -1,11 +1,11 @@
 # root = "/home/sss1/Desktop/projects/eyetracking/data/" # Office desktop
-root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
-# root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
+# root = "/home/painkiller/Desktop/academic/projects/trackit/eyetracking/data/" # Laptop
+root = "/home/sss1/Desktop/academic/projects/eyetracking/data/" # Home desktop
 
 eyetrack_fnames_shrinky = ["AF10shrinky_5_14_2018_9_48.csv", \
                            "AF11shrinky_5_14_2018_10_20.csv", \
                            "AF2shrinky_5_14_2018_10_9.csv", \
-                           "AF5shrinky_5_7_2018_10_43.csv", \
+                           # "AF5shrinky_5_7_2018_10_43.csv", \
                            "AF7shrinky_5_7_2018_9_45.csv", \
                            "AF8shrinky_5_7_2018_10_1.csv", \
                            "B33shrinky_5_9_2018_10_9.csv", \
@@ -31,7 +31,7 @@ eyetrack_fnames_shrinky = ["AF10shrinky_5_14_2018_9_48.csv", \
                            "M144shrinky_5_11_2018_11_2.csv", \
                            "M146shrinky_5_11_2018_10_25.csv", \
                            "M147shrinky_5_4_2018_10_59.csv", \
-                           "R11shrinky_4_24_2018_9_28.csv", \
+                           # "R11shrinky_4_24_2018_9_28.csv", \
                            "R12shrinky_4_26_2018_9_33.csv", \
                            "R17shrinky_4_24_2018_10_34.csv", \
                            "R34shrinky_4_26_2018_10_10.csv", \
@@ -41,7 +41,7 @@ eyetrack_fnames_shrinky = ["AF10shrinky_5_14_2018_9_48.csv", \
 trackit_fnames_shrinky = ["AF10shrinky.csv", \
                           "AF11shrinky.csv", \
                           "AF2shrinky.csv", \
-                          "AF5shrinky.csv", \
+                          # "AF5shrinky.csv", \
                           "AF7shrinky.csv", \
                           "AF8shrinky.csv", \
                           # "B31shrinky.csv", \
@@ -69,7 +69,7 @@ trackit_fnames_shrinky = ["AF10shrinky.csv", \
                           "M144shrinky.csv", \
                           "M146shrinky.csv", \
                           "M147shrinky.csv", \
-                          "R11shrinky.csv", \
+                          # "R11shrinky.csv", \
                           "R12shrinky.csv", \
                           "R17shrinky.csv", \
                           "R34shrinky.csv", \
@@ -81,7 +81,7 @@ eyetrack_fnames_noshrinky = ["AF10noshrinky_5_7_2018_10_57.csv", \
                              "AF2noshrinky_5_7_2018_10_30.csv", \
                              "AF7noshrinky_5_14_2018_9_36.csv", \
                              "AF8noshrinky_5_14_2018_9_21.csv", \
-                             "B31noshrinky_5_9_2018_10_40.csv", \
+                             # "B31noshrinky_5_9_2018_10_40.csv", \
                              "B33noshrinky_5_2_2018_9_45.csv", \
                              "B37noshrinky_5_9_2018_10_26.csv", \
                              "B38noshrinky_5_2_2018_11_16.csv", \
@@ -97,12 +97,12 @@ eyetrack_fnames_noshrinky = ["AF10noshrinky_5_7_2018_10_57.csv", \
                              "M114noshrinky_5_11_2018_13_15.csv", \
                              "M115noshrinky_5_11_2018_13_27.csv", \
                              "M117noshrinky_5_4_2018_12_51.csv", \
-                             "M137noshrinky_5_11_2018_10_33.csv", \
+                             # "M137noshrinky_5_11_2018_10_33.csv", \
                              "M138noshrinky_5_11_2018_10_53.csv", \
                              "M139noshrinky_5_4_2018_10_33.csv", \
                              "M140noshrinky_5_11_2018_10_16.csv", \
                              "M141noshrinky_5_4_2018_9_28.csv", \
-                             "M142noshrinky_5_4_2018_13_48.csv", \
+                             # "M142noshrinky_5_4_2018_13_48.csv", \
                              "M143noshrinky_5_4_2018_9_40.csv", \
                              "M144noshrinky_5_4_2018_11_9.csv", \
                              "M146noshrinky_5_4_2018_10_16.csv", \
@@ -118,7 +118,7 @@ trackit_fnames_noshrinky = ["AF10noshrinky.csv", \
                             "AF2noshrinky.csv", \
                             "AF7noshrinky.csv", \
                             "AF8noshrinky.csv", \
-                            "B31noshrinky.csv", \
+                            # "B31noshrinky.csv", \
                             "B33noshrinky.csv", \
                             "B37noshrinky.csv", \
                             "B38noshrinky.csv", \
@@ -134,12 +134,12 @@ trackit_fnames_noshrinky = ["AF10noshrinky.csv", \
                             "M114noshrinky.csv", \
                             "M115noshrinky.csv", \
                             "M117noshrinky.csv", \
-                            "M137noshrinky.csv", \
+                            # "M137noshrinky.csv", \
                             "M138noshrinky.csv", \
                             "M139noshrinky.csv", \
                             "M140noshrinky.csv", \
                             "M141noshrinky.csv", \
-                            "M142noshrinky.csv", \
+                            # "M142noshrinky.csv", \
                             "M143noshrinky.csv", \
                             "M144noshrinky.csv", \
                             "M146noshrinky.csv", \

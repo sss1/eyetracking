@@ -16,12 +16,20 @@ import pyqt_fit.bootstrap as bs
 # # load datasets
 # data_shrinky = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_shrinky, dp.eyetrack_fnames_shrinky)]
 # data_noshrinky = [load_full_subject_data(*entry, filter_threshold = 1) for entry in zip(dp.trackit_fnames_noshrinky, dp.eyetrack_fnames_noshrinky)]
-# ages_shrinky, ages_noshrinky = read_ages()
+ages_shrinky, ages_noshrinky = read_ages()
+
+print 'After discarding some subjects...'
+print "# of 3yo's in SHRINKY:" + str(np.sum([3 < age and age < 4 for age in ages_shrinky]))
+print "# of 4yo's in SHRINKY:" + str(np.sum([4 < age and age < 5 for age in ages_shrinky]))
+print "# of 5yo's in SHRINKY:" + str(np.sum([5 < age and age < 6 for age in ages_shrinky]))
+print "# of 3yo's in NOSHRINKY:" + str(np.sum([3 < age and age < 4 for age in ages_noshrinky]))
+print "# of 4yo's in NOSHRINKY:" + str(np.sum([4 < age and age < 5 for age in ages_noshrinky]))
+print "# of 5yo's in NOSHRINKY:" + str(np.sum([5 < age and age < 6 for age in ages_noshrinky]))
+
+# print '\nMissing data before interpolation and discarding:'
+# print 'Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_shrinky for trial_data in subject_data[0] for x in trial_data[0]])))
+# print 'No Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_noshrinky for trial_data in subject_data[0] for x in trial_data[0]])))
 # 
-# # print '\nMissing data before interpolation and discarding:'
-# # print 'Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_shrinky for trial_data in subject_data[0] for x in trial_data[0]])))
-# # print 'No Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_noshrinky for trial_data in subject_data[0] for x in trial_data[0]])))
-# # 
 # # Preprocess data (synchronize TrackIt with eyetracking, and interpolate some missing data, and discard trials/subjects
 # # with too much missing data
 # trial_discard_threshold = 0.5 # 0 discards trials with *any* missing data; 1 keeps all trials
@@ -38,11 +46,11 @@ import pyqt_fit.bootstrap as bs
 #                 for subject_data in data_noshrinky]
 # ages_noshrinky = np.asarray([age for (age,subject_data) in zip(ages_noshrinky, data_noshrinky) if subject_data[0] is not None])
 # data_noshrinky = [subject_data for subject_data in data_noshrinky if subject_data[0] is not None]
-# # 
-# # print '\nMissing data after interpolation and discarding:'
-# # print 'Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_shrinky for trial_data in subject_data[0] for x in trial_data[0]])))
-# # print 'No Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_noshrinky for trial_data in subject_data[0] for x in trial_data[0]])))
-# # 
+# 
+# print '\nMissing data after interpolation and discarding:'
+# print 'Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_shrinky for trial_data in subject_data[0] for x in trial_data[0]])))
+# print 'No Shrinky: ' + str(np.mean(np.isnan([x for subject_data in data_noshrinky for trial_data in subject_data[0] for x in trial_data[0]])))
+# 
 # # Values taken from supervised results in CogSci 18 paper
 # sigma2_child = 870 ** 2
 # 
@@ -59,10 +67,23 @@ import pyqt_fit.bootstrap as bs
 
 # Load HMM analysis classifications from cache file
 MLEs_cache_file = np.load(dp.root + 'cache/' + 'MLEs_shrinky_analysis.npz')
-# ages_shrinky = MLEs_cache_file['ages_shrinky']
-# ages_noshrinky = MLEs_cache_file['ages_noshrinky']
+ages_shrinky = MLEs_cache_file['ages_shrinky']
+ages_noshrinky = MLEs_cache_file['ages_noshrinky']
 MLEs_shrinky = MLEs_cache_file['MLEs_shrinky']
 MLEs_noshrinky = MLEs_cache_file['MLEs_noshrinky']
+
+print 'After discarding some subjects...'
+print "# of 3yo's in SHRINKY:" + str(np.sum([3 < age and age < 4 for age in ages_shrinky]))
+print "# of 4yo's in SHRINKY:" + str(np.sum([4 < age and age < 5 for age in ages_shrinky]))
+print "# of 5yo's in SHRINKY:" + str(np.sum([5 < age and age < 6 for age in ages_shrinky]))
+print "# of 3yo's in NOSHRINKY:" + str(np.sum([3 < age and age < 4 for age in ages_noshrinky]))
+print "# of 4yo's in NOSHRINKY:" + str(np.sum([4 < age and age < 5 for age in ages_noshrinky]))
+print "# of 5yo's in NOSHRINKY:" + str(np.sum([5 < age and age < 6 for age in ages_noshrinky]))
+
+# # # Filter subjects to include only the age group of interest
+# # # TODO: Remove this when studying all ages
+# # MLEs_shrinky = [MLE for (MLE, age) in zip(MLEs_shrinky, ages_shrinky) if 3 <= age and age < 4]
+# # MLEs_noshrinky = [MLE for (MLE, age) in zip(MLEs_noshrinky, ages_noshrinky) if 3 <= age and age < 4]
 
 # # Plot proportion of (all) trials on target over trial time
 # plt.figure(1)
@@ -72,31 +93,31 @@ MLEs_noshrinky = MLEs_cache_file['MLEs_noshrinky']
 # plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
 # plt.legend(['Shrinky', 'No Shrinky'])
 # # For each dataset, plot a vertical line indicating the length of the shortest trial
-# min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
-# min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
+min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
+min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
 # plt.gca().set_color_cycle(None)
 # plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
 # plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
 # plt.xlabel('Time (frames, at 60Hz)')
 # plt.ylabel('Fraction of all trials on target')
 # 
-# # Plot proportion of (non-missing or interpolated) trials on target over trial time
-# plt.figure(2)
-# def on_target_or_nan(x): # replace missing data (encoded as -1) with nan
-#   if x == -1:
-#     return float("nan")
-#   return x == 0
-# aligned_shrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
-# aligned_noshrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
-# plt.plot(np.nanmean(aligned_shrinky, axis = 0))
-# plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
-# plt.legend(['Shrinky', 'No Shrinky'])
-# plt.gca().set_color_cycle(None)
-# plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
-# plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
-# plt.xlabel('Time (frames, at 60Hz)')
-# plt.ylabel('Fraction of non-missing or interpolated frames on target')
-# 
+# Plot proportion of (non-missing or interpolated) trials on target over trial time
+plt.figure(2)
+def on_target_or_nan(x): # replace missing data (encoded as -1) with nan
+  if x == -1:
+    return float("nan")
+  return x == 0
+aligned_shrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
+aligned_noshrinky = jagged_to_numpy([[on_target_or_nan(x) for x in trial_data] for subject_data in MLEs_noshrinky for trial_data in subject_data])
+plt.plot(np.nanmean(aligned_shrinky, axis = 0))
+plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
+plt.legend(['Shrinky', 'No Shrinky'])
+plt.gca().set_color_cycle(None)
+plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
+plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
+plt.xlabel('Time (frames, at 60Hz)')
+plt.ylabel('Fraction of non-missing or interpolated frames on target')
+
 # # Plot proportion of missing data over trial time
 # plt.figure(3)
 # aligned_shrinky = jagged_to_numpy([[float(x == -1) for x in trial_data] for subject_data in MLEs_shrinky for trial_data in subject_data])
@@ -164,7 +185,7 @@ MLEs_noshrinky = MLEs_cache_file['MLEs_noshrinky']
 # # plt.plot(grid, result.CIs[0][0,0], 'g--', label='95% CI', linewidth=2)
 # # plt.plot(grid, result.CIs[0][0,1], 'g--', linewidth=2)
 # # plt.fill_between(grid, result.CIs[0][0,0], result.CIs[0][0,1], color='g', alpha=0.25)
-# plt.ylim((0,1))
+plt.ylim((0,1))
 # 
 # # Plot of subject performance (out of all non-missing/interpolated) over age
 # plt.figure(5)
@@ -232,20 +253,21 @@ MLEs_noshrinky = MLEs_cache_file['MLEs_noshrinky']
 # plt.plot(X_noshrinky, missing_data_pred_noshrinky)
 # plt.ylim((0,1))
 
-# Plot proportion of (all) trials on target over trial time
-plt.figure(7)
-aligned_by_subject_shrinky = jagged_to_numpy([np.nanmean(jagged_to_numpy([[float(x == 0) for x in trial_data] for trial_data in subject_data])) for subject_data in MLEs_noshrinky])
-
-plt.plot(aligned_by_subject_shrinky)
-# plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
-# plt.legend(['Shrinky', 'No Shrinky'])
-# For each dataset, plot a vertical line indicating the length of the shortest trial
-# min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
-# min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
-# plt.gca().set_color_cycle(None)
-# plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
-# plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
-plt.xlabel('Time (frames, at 60Hz)')
-plt.ylabel('Fraction of all trials on target')
-
+# # Plot proportion of (all) trials on target over trial time, separately for each subject
+# plt.figure(7)
+# aligned_by_subject_shrinky = jagged_to_numpy([np.nanmean(jagged_to_numpy([[float(x == 0) for x in trial_data] for trial_data in subject_data])) for subject_data in MLEs_noshrinky])
+# 
+# plt.plot(aligned_by_subject_shrinky)
+# # plt.plot(np.nanmean(aligned_noshrinky, axis = 0))
+# # plt.legend(['Shrinky', 'No Shrinky'])
+# # For each dataset, plot a vertical line indicating the length of the shortest trial
+# # min_trial_len_shrinky = min([len(trial_data) for subject_data in MLEs_shrinky for trial_data in subject_data])
+# # min_trial_len_noshrinky = min([len(trial_data) for subject_data in MLEs_noshrinky for trial_data in subject_data])
+# # plt.gca().set_color_cycle(None)
+# # plt.plot([min_trial_len_shrinky, min_trial_len_shrinky], [0, 1])
+# # plt.plot([min_trial_len_noshrinky, min_trial_len_noshrinky], [0, 1])
+# plt.xlabel('Time (frames, at 60Hz)')
+# plt.ylabel('Fraction of all trials on target')
+#
+ 
 plt.show()
