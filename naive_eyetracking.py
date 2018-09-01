@@ -4,7 +4,7 @@ def get_trackit_MLE(eye_track, target, distractors, sigma2 = None):
   N = eye_track.shape[1] # length of trial, in frames
   num_distractors = distractors.shape[0]
 
-  MLE = np.zeros(N)
+  MLE = np.zeros(N, dtype = int)
   all_distances = np.zeros(num_distractors + 1)
 
   for n in range(N):
